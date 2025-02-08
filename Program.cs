@@ -68,5 +68,6 @@ class Program
         stopwatch.Stop();
 
         Console.WriteLine($"Binary Search Algorithm ran in: {stopwatch.ElapsedMilliseconds} milliseconds!");
+        Console.ReadLine();
     }
 }
