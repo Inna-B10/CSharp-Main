@@ -1,0 +1,6 @@
+@Kartlegging_API_Eksempel_HostAddress = http://localhost:5157
+
+GET {{Kartlegging_API_Eksempel_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
