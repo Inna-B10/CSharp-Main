@@ -7,15 +7,19 @@ class Program
         string[] options = { "rock", "paper", "scissors" };
 
         string? start = startGame();
+        if (start == "n") return;
 
-        while (start == "y")
+        string? userChoice;
+
+        do
         {
             Console.WriteLine("-----------------Game started-----------------");
 
             string randomPcChoice = pcChoice(options);
-            Console.WriteLine("PC choice is: *********************");
+            Console.WriteLine("PC's choice is: *********************");
             Console.WriteLine("What is your choice?");
-            string? userChoice = getUserChoice();
+            userChoice = getUserChoice();
+            if (userChoice == "e") return;
 
             Console.WriteLine();
             Console.WriteLine("--------------------Result-------------------");
@@ -30,51 +34,11 @@ class Program
                 Console.WriteLine("Congratulation!");
             }
             Console.WriteLine("----------------Game finished----------------");
-            startGame();
-        }
+            Console.WriteLine();
+        } while (userChoice != "e");
         return;
 
-        string checkWinner(string userChoice, string randomPcChoice)
-        {
-            if (userChoice == randomPcChoice)
-            {
-                return "Draw!";
-            }
-            switch (userChoice)
-            {
-                case "rock":
-                    if (randomPcChoice == "scissors")
-                    {
-                        return "The user wins!";
-                    }
-                    else
-                    {
-                        return "The PC wins!";
-                    }
-                case "paper":
-                    if (randomPcChoice == "rock")
-                    {
-                        return "The user wins!";
-                    }
-                    else
-                    {
-                        return "The PC wins!";
-                    }
-                case "scissors":
-                    if (randomPcChoice == "paper")
-                    {
-                        return "The user wins!";
-                    }
-                    else
-                    {
-                        return "The PC wins!";
-                    }
-                default: return "Some error happened";
-            }
-        }
-
-
-        /* ----------------------------- StartGame Game ----------------------------- */
+        /* ------------------------------- Start Game ------------------------------- */
         string? startGame()
         {
             string? input;
@@ -120,22 +84,59 @@ class Program
                     Console.WriteLine();
                     Console.WriteLine("Invalid input! Try again:");
                 }
-                Console.WriteLine("Enter r for `rock`, p for `paper` or s for `scissors`");
+                Console.WriteLine("Enter r for `rock`, p for `paper`, s for `scissors` or e to exit the game.");
                 input = Console.ReadLine()?.ToLower();
             }
-            while (input != "r" && input != "p" && input != "s");
+            while (input != "r" && input != "p" && input != "s" && input != "e");
 
             string choice = input switch
             {
                 "r" => "rock",
                 "p" => "paper",
                 "s" => "scissors",
+                _ => "e"
             };
             return choice;
         }
 
-
-
-
+        /* ---------------------------- Check The Winner ---------------------------- */
+        string checkWinner(string userChoice, string randomPcChoice)
+        {
+            if (userChoice == randomPcChoice)
+            {
+                return "Draw!";
+            }
+            switch (userChoice)
+            {
+                case "rock":
+                    if (randomPcChoice == "scissors")
+                    {
+                        return "The user wins!";
+                    }
+                    else
+                    {
+                        return "The PC wins!";
+                    }
+                case "paper":
+                    if (randomPcChoice == "rock")
+                    {
+                        return "The user wins!";
+                    }
+                    else
+                    {
+                        return "The PC wins!";
+                    }
+                case "scissors":
+                    if (randomPcChoice == "paper")
+                    {
+                        return "The user wins!";
+                    }
+                    else
+                    {
+                        return "The PC wins!";
+                    }
+                default: return "Some error happened";
+            }
+        }
     }
 }
