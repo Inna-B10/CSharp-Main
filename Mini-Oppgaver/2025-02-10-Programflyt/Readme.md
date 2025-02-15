@@ -8,4 +8,6 @@ Dere står fritt å velge selv hva dere vil lage.
 
 # Rock, paper or scissors
 
+with styled text in console (colors, bg, bold, italic, ect.)
+
 [excalidraw file](https://excalidraw.com/#json=NkezHU1Hjh7JXf-kSPAre,T2YIiet-gY8FVzBB2gZchQ)
