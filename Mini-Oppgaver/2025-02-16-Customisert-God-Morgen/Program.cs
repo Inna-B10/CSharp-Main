@@ -44,6 +44,12 @@ class Program
         }
         Console.WriteLine("Enjoy!");
 
+        string path = Directory.GetCurrentDirectory() + "\\music\\01. Highway To Hell.mp3";
+        Console.WriteLine(path);
+
+
+        MusicPlayer.Player(path);
+
 
     }
 
