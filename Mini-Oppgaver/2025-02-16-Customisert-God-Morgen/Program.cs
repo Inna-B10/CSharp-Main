@@ -4,17 +4,17 @@ class Program
 {
     public static Dictionary<string, Dictionary<string, string>> musicDictionary = new()
 {
-    { "morning", new() { { "rock", "AC/DC - Highway to Hell" }, { "pop", "Dua Lipa - Don't Start Now" },
-                          { "classic", "Vivaldi - Spring" }, { "electronic", "The Prodigy - Firestarter" } } },
+    { "morning", new() { { "rock", "Gorky_Park--Welcome_to_the_Gorky_Park" }, { "pop", "Sean_Paul--Temperture" },
+                          { "instrumental", "Piano_Duel" }, { "soundtracks", "Hey_Mister" } } },
 
-    { "day", new() { { "rock", "Pink Floyd - Comfortably Numb" }, { "pop", "Ed Sheeran - Photograph" },
-                     { "classic", "Bach - Air on the G String" }, { "electronic", "Daft Punk - Something About Us" } } },
+    { "day", new() { { "rock", "Kipelov--Power_of_Fire" }, { "pop", "Gnarls_Barkley--Crazy" },
+                     { "instrumental", "Piano_Duet" }, { "soundtracks", "Dream_in_Bali" } } },
 
-    { "evening", new() { { "rock", "Radiohead - No Surprises" }, { "pop", "Adele - Someone Like You" },
-                         { "classic", "Debussy - Clair de Lune" }, { "electronic", "Röyksopp - Remind Me" } } },
+    { "evening", new() { { "rock", "Nate_Smith--Rather_Be_Lonely" }, { "pop", "Brad_Paisley--The_world" },
+                         { "instrumental", "Secret" }, { "soundtracks", "Boiling" } } },
 
-    { "night", new() { { "rock", "The Cure - Lullaby" }, { "pop", "Billie Eilish - Ocean Eyes" },
-                       { "classic", "Philip Glass - Opening" }, { "electronic", "Flume - Sleepless" } } }
+    { "night", new() { { "rock", "Scorpions--The_Winds_of_Change" }, { "pop", "Tanita_Tikaram--Twist_in_my_Sobriety" },
+                       { "instrumental", "Dancing_with_Father" }, { "soundtracks", "You_Let_Me_Go_With_a_Smile" } } }
 };
 
     static void Main(string[] args)
@@ -26,11 +26,11 @@ class Program
         string now = GetTimesOfDay(date.Hour);
 
         Console.WriteLine("What genre do you prefer?");
-        Console.WriteLine("Rock, pop, classic, electronic");
-        Console.WriteLine("Enter r for `Rock`, p for `pop`, c for `classic`, e for `electronic` or f to exit the program");
+        Console.WriteLine("Rock, pop, instrumental, soundtracks");
+        Console.WriteLine("Enter r for `Rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to exit the program");
 
         string genre = GetValidInput("genre");
-        if (genre == "f") return;
+        if (genre == "e") return;
         string songName = musicDictionary[now][genre];
         Console.WriteLine($"`{songName}` - is a good choice!");
         Console.WriteLine("Would you like to play it now? y/n");
@@ -44,11 +44,15 @@ class Program
         }
         Console.WriteLine("Enjoy!");
 
-        string path = Directory.GetCurrentDirectory() + "\\music\\01. Highway To Hell.mp3";
-        Console.WriteLine(path);
+        string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "music");
+        // string path = Directory.GetCurrentDirectory() + "\\music\\01. Highway To Hell.mp3";
+        string filePath = FindFile(folderPath, songName + ".mp3");
+
+        Console.WriteLine(folderPath);
+        Console.WriteLine(filePath);
 
 
-        MusicPlayer.Player(path);
+        // MusicPlayer.Player(filePath);
 
 
     }
@@ -117,23 +121,37 @@ class Program
 
             case "genre":
 
-                while (string.IsNullOrEmpty(input) || !"rpcef".Contains(input.ToLower()))
+                while (string.IsNullOrEmpty(input) || !"rpise".Contains(input.ToLower()))
                 {
                     Console.WriteLine("Invalid input! Please select one of the genres:");
-                    Console.WriteLine("Enter r for `Rock`, p for `Pop`, c for `Classic`, e for `Electronic` or f to Exit the program");
+                    Console.WriteLine("Enter r for `Rock`, p for `Pop`, i for `instrumental`, s for `soundtracks` or e to Exit the program");
                     input = Console.ReadLine()?.Trim();
                 }
                 return input.ToLower() switch
                 {
                     "r" => "rock",
                     "p" => "pop",
-                    "c" => "classic",
-                    "e" => "electronic",
-                    _ => "f"
+                    "i" => "instrumental",
+                    "s" => "soundtracks",
+                    _ => "e"
                 };
             default:
                 throw new ArgumentException("Unknown input type");
         }
+    }
+    static string FindFile(string folderPath, string fileName)
+    {
+        if (Directory.Exists(folderPath))
+        {
+            string[] files = Directory.GetFiles(folderPath, fileName, SearchOption.TopDirectoryOnly);
+
+            if (files.Length > 0)
+            {
+                return files[0];
+            }
+        }
+
+        return null;
     }
 }
 
