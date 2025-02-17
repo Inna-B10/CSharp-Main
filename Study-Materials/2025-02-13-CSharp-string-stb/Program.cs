@@ -22,20 +22,23 @@ class Program
         for (int i = 0; i < valueArray.Length; i++)
         {
             valueArray[i] = valueArray[i].Trim();
+            Console.WriteLine(valueArray[i]);
         }
         /* Vi initialiserer et nytt personobjekt, og leverer første index som navn.  */
-        var person = new Person(){
+        var person = new Person()
+        {
             Name = valueArray[0],
         };
+
         /* Vi prøver å parse ut andre element som en alder.  */
-        if (int.TryParse(valueArray[1], out var age)) person.Age = age;
-        else 
+        if (int.TryParse(valueArray[1], out var age)) person.Age = age; //[BUG] if no age was given (just name), valueArray[1] does not exist
+        else
         {
             /* Hvis det ikke går, må vi hente en gyldig alder fra brukeren vår.  */
             Console.WriteLine("Please enter a valid age as a whole number:");
             var input = Console.ReadLine();
             int secondAge;
-            while(!int.TryParse(input, out secondAge))
+            while (!int.TryParse(input, out secondAge))
             {
                 Console.WriteLine("Please enter a valid age as a whole number:");
                 input = Console.ReadLine();
@@ -58,7 +61,9 @@ public class Person
     public List<string> Hobbies = [];
     public string CreateGreeting()
     {
-        return $"Hello {Name}, you are {Age} years old. Your favorite hobby is {Hobbies[0]}";
+        return $"Hello {Name}, you are {Age} years old. Your favorite hobby is {Hobbies[0]}"; //[BUG] problem if no hobby was given
+        // string response = $"Hello {Name}, you are {Age} years old. Your hobby: {string.Join(", ", Hobbies)}";
+        // return response;
     }
     public string CreateFormatedGreeting()
     {
