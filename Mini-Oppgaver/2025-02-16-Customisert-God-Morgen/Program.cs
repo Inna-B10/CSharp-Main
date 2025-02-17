@@ -2,6 +2,21 @@
 
 class Program
 {
+    public static Dictionary<string, Dictionary<string, string>> musicDictionary = new()
+{
+    { "morning", new() { { "rock", "AC/DC - Highway to Hell" }, { "pop", "Dua Lipa - Don't Start Now" },
+                          { "classic", "Vivaldi - Spring" }, { "electronic", "The Prodigy - Firestarter" } } },
+
+    { "day", new() { { "rock", "Pink Floyd - Comfortably Numb" }, { "pop", "Ed Sheeran - Photograph" },
+                     { "classic", "Bach - Air on the G String" }, { "electronic", "Daft Punk - Something About Us" } } },
+
+    { "evening", new() { { "rock", "Radiohead - No Surprises" }, { "pop", "Adele - Someone Like You" },
+                         { "classic", "Debussy - Clair de Lune" }, { "electronic", "Röyksopp - Remind Me" } } },
+
+    { "night", new() { { "rock", "The Cure - Lullaby" }, { "pop", "Billie Eilish - Ocean Eyes" },
+                       { "classic", "Philip Glass - Opening" }, { "electronic", "Flume - Sleepless" } } }
+};
+
     static void Main(string[] args)
     {
         Console.WriteLine("Please, enter your name");
@@ -9,14 +24,42 @@ class Program
         Console.WriteLine($"Welcome {userName}!");
         DateTime date = DateTime.Now;
         string now = GetTimesOfDay(date.Hour);
+
         Console.WriteLine("What genre do you prefer?");
         Console.WriteLine("Rock, pop, classic, electronic");
         Console.WriteLine("Enter r for `Rock`, p for `pop`, c for `classic`, e for `electronic` or f to exit the program");
 
         string genre = GetValidInput("genre");
-        Console.WriteLine(genre);
+        if (genre == "f") return;
+        string songName = musicDictionary[now][genre];
+        Console.WriteLine($"`{songName}` - is a good choice!");
+        Console.WriteLine("Would you like to play it now? y/n");
+        string? openPlayer = GetValidInput("player");
+
+
+        if (openPlayer != "y")
+        {
+            Console.WriteLine(GetEndMessage(now));
+            return;
+        }
+        Console.WriteLine("Enjoy!");
+
+
     }
 
+    public static string GetEndMessage(string now)
+    {
+        string endMessage = now.ToLower() switch
+        {
+            "morning" => "Have a nice day!",
+            "day" => "Have a great rest of the day!",
+            "evening" => "Enjoy your evening!",
+            "night" => "Sleep well!",
+            _ => "Bye bye!",
+        };
+        return endMessage;
+
+    }
     public static string GetTimesOfDay(int time)
     {
         string nowIs = "";
@@ -51,6 +94,13 @@ class Program
 
         switch (type)
         {
+            case "player":
+                while (string.IsNullOrEmpty(input) || !"yn".Contains(input.ToLower()))
+                {
+                    Console.WriteLine("Invalid input! Please enter `y` for yes, `n` for no");
+                    input = Console.ReadLine()?.Trim();
+                }
+                return input.ToLower();
             case "name":
                 while (string.IsNullOrEmpty(input))
                 {

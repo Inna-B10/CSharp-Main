@@ -15,4 +15,4 @@ Trenger vi å parse bruker input på noe vis?
 
 program offers sang depending on the time of day and the genre selected by user.
 
-[excalidraw file](https://excalidraw.com/#json=tJTsgyV-m_77Y6hsa-s8r,elH_hJNFxAUVNH2aY3S_Qg)
+[excalidraw file](https://excalidraw.com/#json=BszsZWzEcHMjo9CXV2k2G,kOQ95ERIP4g_oC5v887rEw)
