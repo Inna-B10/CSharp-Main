@@ -27,7 +27,7 @@ class Program
 
         Console.WriteLine("What genre do you prefer?");
         Console.WriteLine("Rock, pop, instrumental, soundtracks");
-        Console.WriteLine("Enter r for `Rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to exit the program");
+        Console.WriteLine("Enter r for `rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to exit the program");
 
         string genre = GetValidInput("genre");
         if (genre == "e") return;
@@ -42,19 +42,13 @@ class Program
             Console.WriteLine(GetEndMessage(now));
             return;
         }
+        Console.Clear();
         Console.WriteLine("Enjoy!");
 
         string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "music");
-        // string path = Directory.GetCurrentDirectory() + "\\music\\01. Highway To Hell.mp3";
         string filePath = FindFile(folderPath, songName + ".mp3");
 
-        Console.WriteLine(folderPath);
-        Console.WriteLine(filePath);
-
-
-        // MusicPlayer.Player(filePath);
-
-
+        MusicPlayer.Player(filePath);
     }
 
     public static string GetEndMessage(string now)
@@ -124,7 +118,7 @@ class Program
                 while (string.IsNullOrEmpty(input) || !"rpise".Contains(input.ToLower()))
                 {
                     Console.WriteLine("Invalid input! Please select one of the genres:");
-                    Console.WriteLine("Enter r for `Rock`, p for `Pop`, i for `instrumental`, s for `soundtracks` or e to Exit the program");
+                    Console.WriteLine("Enter r for `rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to Exit the program");
                     input = Console.ReadLine()?.Trim();
                 }
                 return input.ToLower() switch
@@ -150,8 +144,7 @@ class Program
                 return files[0];
             }
         }
-
-        return null;
+        return "";
     }
 }
 

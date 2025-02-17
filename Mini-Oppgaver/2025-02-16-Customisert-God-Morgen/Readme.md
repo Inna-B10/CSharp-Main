@@ -13,6 +13,9 @@ Trenger vi å parse bruker input på noe vis?
 
 # MoodTunes
 
-program offers sang depending on the time of day and the genre selected by user.
+The program offers a song depending on the time of day and the user's choice of genre. It is possible to play a song directly from the program.
 
-[excalidraw file](https://excalidraw.com/#json=BszsZWzEcHMjo9CXV2k2G,kOQ95ERIP4g_oC5v887rEw)
+for playing music used  
+`dotnet add package NAudio`
+
+### [excalidraw file](https://excalidraw.com/#json=BszsZWzEcHMjo9CXV2k2G,kOQ95ERIP4g_oC5v887rEw)
