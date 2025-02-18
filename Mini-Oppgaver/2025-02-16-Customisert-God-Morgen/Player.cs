@@ -11,68 +11,68 @@ class MusicPlayer
     }
     string songName = Path.GetFileName(path);
 
-    using (var audioFile = new AudioFileReader(path))
-    using (var outputDevice = new WaveOutEvent())
+    using var audioFile = new AudioFileReader(path);
+    using var outputDevice = new WaveOutEvent();
+
+    audioFile.Volume = 0.5f; // Initial volume 50%
+    bool isPaused = false; // Pause flag
+
+    outputDevice.Init(audioFile);
+    outputDevice.Play();
+
+
+    Console.WriteLine($"{new string(' ', 12)}🎵 {StylesClass.INVERSE} Player launched! {StylesClass.RESET_INVERSE}");
+    Console.WriteLine();
+    Console.WriteLine($"Playing:  {StylesClass.BOLD}{songName}{StylesClass.RESET_BOLD}");
+    Console.WriteLine("Control: ▶ [Spacebar] Pause, 🔊 [+/-] Volume,  ⏹ [Enter] Exit");
+
+    Console.WriteLine($"{new string(' ', 20)}{StylesClass.BOLD}Enjoy!{StylesClass.RESET_BOLD}");
+    Console.WriteLine();
+    Console.WriteLine($"{StylesClass.ITALIC}The program will end after the track has ended.{StylesClass.RESET_ITALIC}");
+
+    // Automatically close the program after the end of the track
+    outputDevice.PlaybackStopped += (sender, args) =>
     {
-      audioFile.Volume = 0.5f; // Initial volume 50%
+      Console.WriteLine("The music has ended. Exit program.");
+      Console.WriteLine($"{StylesClass.RESET_ALL}");
+      Environment.Exit(0);
+    };
 
-      outputDevice.Init(audioFile);
-      outputDevice.Play();
-
-      bool isPaused = false; // Pause flag
-
-      Console.WriteLine($"🎵 {StylesClass.REVERSE}Player launched!\x1B[27m");
-      Console.WriteLine($"Playing:  {StylesClass.BOLD}{songName}\x1B[22m");
-      Console.WriteLine("Control: ▶ [Spacebar] Pause, 🔊 [+/-] Volume,  ⏹ [Enter] Exit");
-
-      Console.WriteLine($"{StylesClass.BOLD}Enjoy!\x1B[22m");
-
-      Console.WriteLine($"{StylesClass.ITALIC}The program will end after the track has ended.\x1B[23m");
-
-      // Automatically close the program after the end of the track
-      outputDevice.PlaybackStopped += (sender, args) =>
+    // Real-time volume control
+    while (true)
+    {
+      if (Console.KeyAvailable)
       {
-        Console.WriteLine("The music has ended. Exit program.");
-        Console.WriteLine($"{StylesClass.RESET}");
-        Environment.Exit(0);
-      };
-
-      // Real-time volume control
-      while (true)
-      {
-        if (Console.KeyAvailable)
+        var key = Console.ReadKey(true).Key;
+        if (key == ConsoleKey.Enter) break; //exit
+        if (key == ConsoleKey.OemPlus || key == ConsoleKey.Add)
         {
-          var key = Console.ReadKey(true).Key;
-          if (key == ConsoleKey.Enter) break; //exit
-          if (key == ConsoleKey.OemPlus || key == ConsoleKey.Add)
+          audioFile.Volume = Math.Min(audioFile.Volume + 0.1f, 1.0f);
+          Console.WriteLine($"🔊 + : {audioFile.Volume * 100}%");
+        }
+        else if (key == ConsoleKey.OemMinus || key == ConsoleKey.Subtract)
+        {
+          audioFile.Volume = Math.Max(audioFile.Volume - 0.1f, 0.0f);
+          Console.WriteLine($"🔊 - : {audioFile.Volume * 100}%");
+        }
+        else if (key == ConsoleKey.Spacebar)
+        {
+          if (isPaused)
           {
-            audioFile.Volume = Math.Min(audioFile.Volume + 0.1f, 1.0f);
-            Console.WriteLine($"🔊 + : {audioFile.Volume * 100}%");
+            outputDevice.Play();
+            Console.WriteLine("▶  Playing");
           }
-          else if (key == ConsoleKey.OemMinus || key == ConsoleKey.Subtract)
+          else
           {
-            audioFile.Volume = Math.Max(audioFile.Volume - 0.1f, 0.0f);
-            Console.WriteLine($"🔊 - : {audioFile.Volume * 100}%");
+            outputDevice.Pause();
+            Console.WriteLine("⏸  Paused. Press `Spacebar` to continue playing");
           }
-          else if (key == ConsoleKey.Spacebar)
-          {
-            if (isPaused)
-            {
-              outputDevice.Play();
-              Console.WriteLine("▶  Playing");
-            }
-            else
-            {
-              outputDevice.Pause();
-              Console.WriteLine("⏸  Paused. Press `Spacebar` to continue playing");
-            }
-            isPaused = !isPaused;
-          }
+          isPaused = !isPaused;
         }
       }
-      // If Enter is pressed, the program will be terminated manually.
-      Console.WriteLine($"{StylesClass.RESET}");
-      outputDevice.Stop();
     }
+    // If Enter is pressed, the program will be terminated manually.
+    Console.WriteLine($"{StylesClass.RESET_ALL}");
+    outputDevice.Stop();
   }
 }
