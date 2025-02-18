@@ -21,18 +21,19 @@ class MusicPlayer
 
       bool isPaused = false; // Pause flag
 
-      Console.WriteLine("🎵 Player launched!");
-      Console.WriteLine($"Playing:  {songName}");
+      Console.WriteLine($"🎵 {StylesClass.REVERSE}Player launched!\x1B[27m");
+      Console.WriteLine($"Playing:  {StylesClass.BOLD}{songName}\x1B[22m");
       Console.WriteLine("Control: ▶ [Spacebar] Pause, 🔊 [+/-] Volume,  ⏹ [Enter] Exit");
 
-      Console.WriteLine();
+      Console.WriteLine($"{StylesClass.BOLD}Enjoy!\x1B[22m");
 
-      Console.WriteLine("The program will end after the track has ended.");
+      Console.WriteLine($"{StylesClass.ITALIC}The program will end after the track has ended.\x1B[23m");
 
       // Automatically close the program after the end of the track
       outputDevice.PlaybackStopped += (sender, args) =>
       {
         Console.WriteLine("The music has ended. Exit program.");
+        Console.WriteLine($"{StylesClass.RESET}");
         Environment.Exit(0);
       };
 
@@ -70,6 +71,7 @@ class MusicPlayer
         }
       }
       // If Enter is pressed, the program will be terminated manually.
+      Console.WriteLine($"{StylesClass.RESET}");
       outputDevice.Stop();
     }
   }
