@@ -18,4 +18,10 @@ The program offers a song depending on the time of day and the user's choice of 
 for playing music used  
 `dotnet add package NAudio`
 
+#### player options:
+
+- press - or + for volume control
+- press Enter to exit immediately (The program will end after the track ends)
+- press Spacebar for pause/resume
+
 ### [excalidraw file](https://excalidraw.com/#json=HCyGK0OPEShjpy2FMcgTZ,3-ttUcsG6DrBzu2ihPx1-Q)
