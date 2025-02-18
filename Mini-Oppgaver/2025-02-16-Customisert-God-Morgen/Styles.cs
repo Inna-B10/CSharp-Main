@@ -1,5 +1,3 @@
-using System;
-using System.Drawing;
 
 namespace _2025_02_16_Customisert_God_Morgen;
 public static class StylesClass
@@ -13,18 +11,6 @@ public static class StylesClass
   public const string RESET_INVERSE = "\x1B[27m";
   public const string ERROR = "\x1B[38;5;196m\x1B[48;5;189m";
 
-  // public static string GetColor(string time)
-  // {
-  //   return time switch
-  //   {
-  //     "morning" => "\x1B[38;5;46m",
-  //     "day" => "\x1B[38;5;21m",
-  //     "evening" => "\x1B[38;5;202m",
-  //     "night" => "\x1B[38;5;55m",
-  //     _ => "\x1B[38;5;16m",
-  //   };
-  // }
-
   public static readonly Dictionary<string, (string color, string message, string goodbye)> DayOptions = new()
   {
     ["morning"] = (
@@ -33,7 +19,7 @@ public static class StylesClass
                 "Have a nice day!"
             ),
     ["day"] = (
-                "\x1B[38;5;21m",
+                "\x1B[38;5;27m",
                 "Boosting your day?\nWell-chosen melodies enhance productivity throughout the workday.",
                 "Have a great rest of the day!"
             ),

@@ -27,7 +27,7 @@ class Program
         bool isShowPlayer = IsUserWantPlaySong(songName);
         if (!isShowPlayer)
         {
-            Console.WriteLine($"{new string(' ', 20)}{StylesClass.INVERSE}{currentData.goodbye}{StylesClass.RESET_ALL}");
+            Console.WriteLine($"{new string(' ', 20)}{StylesClass.INVERSE} {currentData.goodbye} {StylesClass.RESET_ALL}");
             return;
         }
 
@@ -63,58 +63,62 @@ class Program
     {
         Console.Write("What genre do you prefer? ");
         Console.WriteLine(" [r] rock, [p] pop, [i] instrumental, [s] soundtracks or [e] to exit");
-
         return GetValidInput("genre");
     }
 
     public static bool IsUserWantPlaySong(string song)
     {
         Console.WriteLine($"{currentData.color}{StylesClass.BOLD}`{song}`{StylesClass.RESET_BOLD} - is a good choice!");
-        Console.WriteLine($"Would you like to play it now? y/n");
+        Console.WriteLine($"Would you like to play it now? [y] yes, [n] no");
         return GetValidInput("player") == "y";
     }
-    public static string GetValidInput(string type = "name")
+    public static string GetValidInput(string type)
     {
-        string? input = Console.ReadLine()?.Trim();
-
-        switch (type)
+        string? input;
+        do
         {
-            case "player":
-                while (string.IsNullOrEmpty(input) || !"yn".Contains(input.ToLower()))
-                {
-                    Console.WriteLine($"{StylesClass.ERROR}Invalid input! Please enter `y` for yes, `n` for no{StylesClass.RESET_ALL}{currentData.color}");
-                    input = Console.ReadLine()?.Trim();
-                }
-                return input.ToLower();
-            case "name":
-                while (string.IsNullOrEmpty(input))
-                {
-                    Console.WriteLine($"{StylesClass.ERROR}Invalid input! Please, enter your name{StylesClass.RESET_ALL}{currentData.color}");
-                    input = Console.ReadLine()?.Trim();
-                }
-                return input;
-
-            case "genre":
-
-                while (string.IsNullOrEmpty(input) || !"rpise".Contains(input.ToLower()))
-                {
-                    Console.WriteLine($"{StylesClass.ERROR}Invalid input! Please select one of the genres:{StylesClass.RESET_ALL}{currentData.color}");
-                    Console.WriteLine($"{StylesClass.ITALIC}Enter r for `rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to Exit the program{StylesClass.RESET_ALL}{currentData.color}");
-                    input = Console.ReadLine()?.Trim();
-                }
-                return input.ToLower() switch
-                {
-                    "r" => "rock",
-                    "p" => "pop",
-                    "i" => "instrumental",
-                    "s" => "soundtracks",
-                    _ => "e"
-                };
-            default:
-                throw new ArgumentException("Unknown input type");
+            input = Console.ReadLine()?.Trim();
+            if (!IsValidInput(input, type))
+            {
+                Console.WriteLine(GetErrorMessage(type));
+                input = null;
+            }
+        } while (input == null);
+        if (type == "genre")
+        {
+            input = input.ToLower() switch
+            {
+                "r" => "rock",
+                "p" => "pop",
+                "i" => "instrumental",
+                "s" => "soundtracks",
+                _ => "e"
+            };
         }
+        return input;
     }
-    static string FindFile(string folderPath, string fileName)
+    public static bool IsValidInput(string? input, string type)
+    {
+        return type switch
+        {
+            "name" => !string.IsNullOrEmpty(input),
+            "genre" => !string.IsNullOrEmpty(input) && "rpise".Contains(input.ToLower()),
+            "player" => !string.IsNullOrEmpty(input) && "yn".Contains(input.ToLower()),
+            _ => false
+        };
+    }
+
+    public static string GetErrorMessage(string type)
+    {
+        return type switch
+        {
+            "name" => $"{StylesClass.ERROR}Invalid input! Please, enter your name{StylesClass.RESET_ALL}",
+            "genre" => $"{StylesClass.ERROR}Invalid input! Enter r for `rock`, p for `pop`, i for `instrumental`, s for `soundtracks` or e to exit the program{StylesClass.RESET_ALL}",
+            "player" => $"{StylesClass.ERROR}Invalid input! Please enter `y` for yes, `n` for no{StylesClass.RESET_ALL}",
+            _ => $"{StylesClass.ERROR}Unknown error{StylesClass.RESET_ALL}"
+        };
+    }
+    public static string FindFile(string folderPath, string fileName)
     {
         if (Directory.Exists(folderPath))
         {
