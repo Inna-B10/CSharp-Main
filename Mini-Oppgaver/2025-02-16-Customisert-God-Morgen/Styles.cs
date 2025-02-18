@@ -25,12 +25,3 @@ public class StylesClass
     };
   }
 }
-
-// public static class ColorExt
-// {
-//   public static string ToAscii(this Color clr, bool isForeground)
-//   {
-//     var present = isForeground ? 38 : 48;
-//     return $"\x1b[{present};2;{clr.R};{clr.G};{clr.B}m";
-//   }
-// }

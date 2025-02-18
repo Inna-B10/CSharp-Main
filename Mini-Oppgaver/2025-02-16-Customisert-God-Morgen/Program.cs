@@ -3,42 +3,67 @@ namespace _2025_02_16_Customisert_God_Morgen;
 
 class Program
 {
-    public static string partOfTheDay = GetPartOfTheDay(DateTime.Now.Hour);
-    public static string currentColor = StylesClass.GetColor(partOfTheDay);
+    public static string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "music");
+    public static string partOfDay = GetPartOfDay(DateTime.Now.Hour);
+    public static string currentColor = StylesClass.GetColor(partOfDay);
 
     static void Main(string[] args)
     {
-        Console.Clear();
-        Console.Write($"{StylesClass.RESET_ALL}");
-        Console.WriteLine("Please, enter your name");
-        string userName = GetValidInput("name");
-        Console.WriteLine($"{currentColor}{new string(' ', 20)}{StylesClass.INVERSE} Welcome {userName}! {StylesClass.RESET_INVERSE}");
-
-        Console.WriteLine($"{StylesClass.BOLD}{ShowMessage(partOfTheDay)}{StylesClass.RESET_BOLD}");
+        Reset();
+        GreetingUser();
+        Console.WriteLine($"{StylesClass.BOLD}{ShowMessage(partOfDay)}{StylesClass.RESET_BOLD}");
 
         Console.WriteLine();
-        Console.Write("What genre do you prefer? ");
-        Console.WriteLine(" [r] rock, [p] pop, [i] instrumental, [s] soundtracks or [e] to exit");
-
-        string genre = GetValidInput("genre");
+        string genre = GetGenre();
         if (genre == "e") return;
-        string songName = MusicData.MusicDictionary[partOfTheDay][genre];
-        Console.WriteLine($"{currentColor}{StylesClass.BOLD}`{songName}`{StylesClass.RESET_BOLD} - is a good choice!");
-        Console.WriteLine($"Would you like to play it now? y/n");
-        string? openPlayer = GetValidInput("player");
 
-
-        if (openPlayer != "y")
+        string songName = MusicData.MusicDictionary[partOfDay][genre];
+        if (songName == null || string.IsNullOrEmpty(songName))
         {
-            Console.WriteLine($"{new string(' ', 20)}{StylesClass.INVERSE}{GetGoodbyeMessage(partOfTheDay)}{StylesClass.RESET_ALL}");
+            Console.WriteLine("Could not get the name of the song!");
             return;
         }
+
+        bool isShowPlayer = IsUserWantPlaySong(songName);
+        if (!isShowPlayer)
+        {
+            Console.WriteLine($"{new string(' ', 20)}{StylesClass.INVERSE}{GetGoodbyeMessage(partOfDay)}{StylesClass.RESET_ALL}");
+            return;
+        }
+
         // Console.Clear();        
-        string folderPath = Path.Combine(Directory.GetCurrentDirectory(), "music");
         string filePath = FindFile(folderPath, songName + ".mp3");
 
         MusicPlayer.Player(filePath);
     }
+
+    public static void Reset()
+    {
+        Console.Clear();
+        Console.Write($"{StylesClass.RESET_ALL}");
+    }
+    public static void GreetingUser()
+    {
+        Console.WriteLine("Please, enter your name");
+        string userName = GetValidInput("name");
+        Console.WriteLine($"{currentColor}{new string(' ', 20)}{StylesClass.INVERSE} Welcome {userName}! {StylesClass.RESET_INVERSE}");
+    }
+
+    public static string GetGenre()
+    {
+        Console.Write("What genre do you prefer? ");
+        Console.WriteLine(" [r] rock, [p] pop, [i] instrumental, [s] soundtracks or [e] to exit");
+
+        return GetValidInput("genre");
+    }
+
+    public static bool IsUserWantPlaySong(string song)
+    {
+        Console.WriteLine($"{currentColor}{StylesClass.BOLD}`{song}`{StylesClass.RESET_BOLD} - is a good choice!");
+        Console.WriteLine($"Would you like to play it now? y/n");
+        return GetValidInput("player") == "y";
+    }
+
 
     public static string GetGoodbyeMessage(string now)
     {
@@ -53,7 +78,7 @@ class Program
         return goodbyeMessage;
 
     }
-    public static string GetPartOfTheDay(int time)
+    public static string GetPartOfDay(int time)
     {
         return time switch
         {
@@ -65,19 +90,16 @@ class Program
     }
     public static string ShowMessage(string part)
     {
-        switch (part)
+        return part switch
         {
-            case "evening":
-                return "Winding down?\nRelaxing music helps create an atmosphere of comfort and harmony in the evening.";
+            "evening" => "Winding down?\nRelaxing music helps create an atmosphere of comfort and harmony in the evening.",
 
-            case "day":
-                return "Boosting your day?\nWell-chosen melodies enhance productivity throughout the workday.";
+            "day" => "Boosting your day?\nWell-chosen melodies enhance productivity throughout the workday.",
 
-            case "morning":
-                return "Starting the day with energy?\nEnergetic music is the perfect way to start the day with vigor and motivation.";
-            default:
-                return "Late-night tunes?\nSoft, calming tunes prepare your mind for a good night's sleep.{StylesClass.RESET_BOLD}";
-        }
+            "morning" => "Starting the day with energy?\nEnergetic music is the perfect way to start the day with vigor and motivation.",
+
+            _ => "Late-night tunes?\nSoft, calming tunes prepare your mind for a good night's sleep.",
+        };
     }
     public static string GetValidInput(string type = "name")
     {
