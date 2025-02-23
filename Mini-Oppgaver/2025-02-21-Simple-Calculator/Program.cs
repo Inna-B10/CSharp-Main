@@ -15,6 +15,7 @@ class Program
         {
             if (firstRound) firstRound = false; else Console.WriteLine("Invalid input!");
             Console.WriteLine("Please enter a mathematical expression");
+            Console.WriteLine("Acceptable operands: [-] [+] [/] [*]");
             input = Console.ReadLine()?.Trim();
         }
         while (!IsValidInput(input));
