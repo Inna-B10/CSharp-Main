@@ -4,19 +4,26 @@ namespace _2025_02_25_UnitConverter;
 
 class Program
 {
-    public static Dictionary<string, double> LengthUnits = new()
+    public enum LengthUnits
+    {
+        meters, kilometers, miles, feet
+    }
+    public enum CurrencyUnits
+    {
+        USD, EUR, NOK
+    }
+    public static Dictionary<LengthUnits, double> length = new()
         {
-            { "meters", 1 },
-            { "kilometers", 1000 },
-            { "miles", 1609.34 },
-            { "feet", 0.3048 }
+            { LengthUnits.meters, 1 },
+            { LengthUnits.kilometers, 1000 },
+            { LengthUnits.miles, 1609.34 },
+            { LengthUnits.feet, 0.3048 }
         };
-    public static Dictionary<string, double> CurrencyUnits = new()
+    public static Dictionary<CurrencyUnits, double> currency = new()
         {
-            { "USD", 1 },
-            { "EUR", 0.95 },
-            { "GBP", 0.79 },
-            { "NOK", 11.10 }
+            { CurrencyUnits.USD, 1 },
+            { CurrencyUnits.EUR, 0.95 },
+            { CurrencyUnits.NOK, 11.10 }
         };
     public static string FormatNumber(double value)
     {
@@ -26,12 +33,12 @@ class Program
     {
         try
         {
-            var lengthConverter = new UnitConverter<string>(LengthUnits);
-            Console.WriteLine("10 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase("miles", 10)));
-            Console.WriteLine("5 kilometers in meters: " + FormatNumber(lengthConverter.ConvertToBase("kilometers", 5)));
+            var lengthConverter = new UnitConverter<LengthUnits>(length);
+            Console.WriteLine("10 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.miles, 10)));
+            Console.WriteLine("5 kilometers in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.kilometers, 5)));
 
-            var currencyConverter = new UnitConverter<string>(CurrencyUnits);
-            double result = currencyConverter.ConvertToBase("NOK", 100);
+            var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
+            double result = currencyConverter.ConvertToBase(CurrencyUnits.NOK, 100);
             string convertedValue = FormatNumber(result);
             Console.WriteLine("100 Norwegian Kroner in Dollars: " + convertedValue);
         }
@@ -56,7 +63,7 @@ where TFrom : notnull
     public double ConvertToBase(TFrom from, double quantity)
     {
         if (!conversionRates.TryGetValue(from, out double value))
-            throw new Exception($"Конверсия из '{from}' не определена.");
+            throw new Exception("Invalid unit provided for conversion.");
 
         return value * quantity;
     }
