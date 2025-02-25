@@ -10,7 +10,7 @@ class Program
     }
     public enum CurrencyUnits
     {
-        USD, EUR, NOK
+        USD, EUR, NOK, ILS, GBP
     }
     public static Dictionary<LengthUnits, double> length = new()
         {
@@ -23,7 +23,10 @@ class Program
         {
             { CurrencyUnits.USD, 1 },
             { CurrencyUnits.EUR, 0.95 },
-            { CurrencyUnits.NOK, 11.10 }
+            { CurrencyUnits.NOK, 11.10 },
+            { CurrencyUnits.ILS, 3.59 },
+            { CurrencyUnits.GBP, 0.79 },
+
         };
     public static string FormatNumber(double value)
     {
@@ -63,21 +66,21 @@ where T : Enum
     public double ConvertToBase(T from, double amount)
     {
         if (!conversionRates.TryGetValue(from, out double value))
-            throw new Exception("Invalid unit provided for conversion.");
+            throw new Exception($"Conversion for '{from}' is undefined.");
 
         return amount / value;
     }
     public double ConvertFromBase(T to, double amount)
     {
         if (!conversionRates.TryGetValue(to, out double value))
-            throw new Exception("Invalid unit provided for conversion.");
+            throw new Exception($"Conversion for '{to}' is undefined.");
 
         return amount * value;
     }
     public double ConvertDirect(T from, T to, double amount)
     {
         if (!conversionRates.TryGetValue(from, out _) || (!conversionRates.TryGetValue(to, out _)))
-            throw new Exception("Invalid unit provided for conversion.");
+            throw new Exception($"Conversion for '{from}' or/and '{to}' is undefined.");
 
         double baseValue = ConvertToBase(from, amount);
         return ConvertFromBase(to, baseValue);
