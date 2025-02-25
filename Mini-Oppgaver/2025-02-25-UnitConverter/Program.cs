@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace _2025_02_25_UnitConverter;
 
-class Program
+partial class Program
 {
     public enum LengthUnits
     {
@@ -34,17 +35,41 @@ class Program
     }
     static void Main()
     {
+        Console.WriteLine("Hello, user!");
+        UserChoice();
+
+        //         try
+        //         {
+        //             var lengthConverter = new UnitConverter<LengthUnits>(length);
+        //             Console.WriteLine("2 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.miles, 2)));
+        //             Console.WriteLine("100 meters in feet: " + FormatNumber(lengthConverter.ConvertFromBase(LengthUnits.feet, 100)));
+        //             Console.WriteLine("5 kilometers in miles: " + FormatNumber(lengthConverter.ConvertDirect(LengthUnits.kilometers, LengthUnits.miles, 5)));
+        // 
+        //             var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
+        //             double result = currencyConverter.ConvertCurrencies(CurrencyUnits.EUR, CurrencyUnits.NOK, 15);
+        //             string convertedValue = FormatNumber(result);
+        //             Console.WriteLine("15 Euro in Norwegian Kroner : " + convertedValue);
+        //         }
+        //         catch (ArgumentNullException arNull)
+        //         {
+        //             Console.WriteLine("Error: " + arNull.Message);
+        //         }
+        //         catch (Exception ex)
+        //         {
+        //             Console.WriteLine("Error: " + ex.Message);
+        //         }
+
+    }
+    public static void LengthConverter()
+    {
         try
         {
             var lengthConverter = new UnitConverter<LengthUnits>(length);
-            Console.WriteLine("2 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.miles, 2)));
-            Console.WriteLine("100 meters in feet: " + FormatNumber(lengthConverter.ConvertFromBase(LengthUnits.feet, 100)));
-            Console.WriteLine("5 kilometers in miles: " + FormatNumber(lengthConverter.ConvertDirect(LengthUnits.kilometers, LengthUnits.miles, 5)));
+            Console.WriteLine("4 values are available for conversion");
+            Console.WriteLine("[m] meters, [k] kilometers, [l] miles, [f] feet");
+            Console.WriteLine("valid format: from=to, f.ex to convert 5 kilometers to meters write 5k=m");
+            string result = GetValidInput("length");
 
-            var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
-            double result = currencyConverter.ConvertCurrency(CurrencyUnits.EUR, CurrencyUnits.NOK, 15);
-            string convertedValue = FormatNumber(result);
-            Console.WriteLine("15 Euro in Norwegian Kroner : " + convertedValue);
         }
         catch (ArgumentNullException arNull)
         {
@@ -55,9 +80,113 @@ class Program
             Console.WriteLine("Error: " + ex.Message);
         }
 
-        Console.WriteLine("Hello");
+
     }
+
+    public static void CurrencyConverter()
+    {
+        try
+        {
+            var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
+            Console.WriteLine("Currencies available for conversion: USD, EUR, NOK, ILS, GBP");
+            Console.WriteLine("Valid format: from=to, f.ex to convert 10 eur to nok write 10eur=nok");
+            string result = GetValidInput("currency");
+        }
+        catch (ArgumentNullException arNull)
+        {
+            Console.WriteLine("Error: " + arNull.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+
+    }
+
+    public static void UserChoice()
+    {
+        Console.WriteLine("What do you want to convert? [1] length, [2] currency");
+        string choice = GetValidInput("choice");
+        Console.WriteLine(choice);
+        if (choice == "error")
+        {
+            Console.WriteLine("Some error occurred. The program is terminating.");
+            return;
+        }
+        else if (choice == "length")
+        {
+            LengthConverter();
+
+        }
+        else Console.WriteLine("currency");
+        // CurrencyConverter();
+    }
+    public static string GetValidInput(string type)
+    {
+        string? input;
+        do
+        {
+            input = Console.ReadLine();
+            if (!IsValidInput(input, type))
+            {
+                Console.WriteLine(GetErrorMessage(type));
+                input = null;
+            }
+
+
+        } while (input == null);
+
+        if (type == "choice")
+        {
+            return input switch
+            {
+                "1" => "length",
+                "2" => "currency",
+                _ => "error"
+            };
+        }
+        return input;
+    }
+    public static bool IsCurrencyInputValid(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return false;
+
+        }
+        input = input.Replace(" ", "");
+        string[] parts = input.Split("=");
+        if (parts.Length != 2)
+        {
+            return false;
+        }
+        return Enum.TryParse(parts[0], true, out CurrencyUnits _) && Enum.TryParse(parts[1], true, out CurrencyUnits _);
+    }
+    public static bool IsValidInput(string? input, string type)
+    {
+        return type switch
+        {
+            "choice" => !string.IsNullOrWhiteSpace(input) && "12".Contains(input),
+            "length" => !string.IsNullOrWhiteSpace(input) && LengthRegex().IsMatch(input),
+            "currency" => IsCurrencyInputValid(input),
+            _ => false
+        };
+    }
+    public static string GetErrorMessage(string type)
+    {
+        return type switch
+        {
+            "choice" => "Invalid input!Press 1 for length converting or 2 for currency converting",
+            "length" => "Invalid input! Available length: [m] meters, [k] kilometers, [l] miles, [f] feet. Valid format: 5k=m",
+            "currency" => "Invalid input! Available currency: USD, EUR, NOK, ILS, GBP. Valid format: 1000nok=usd",
+            _ => "Unknown error"
+        };
+    }
+
+    [GeneratedRegex(@"^\d+([.,]\d+)?[mfklMFKL]=[mfklMFKL]$")]
+    private static partial Regex LengthRegex();
 }
+
 
 public class UnitConverter<T>(Dictionary<T, double> rates)
 where T : Enum
@@ -86,7 +215,7 @@ where T : Enum
         double baseValue = ConvertToBase(from, amount);
         return ConvertFromBase(to, baseValue);
     }
-    public double ConvertCurrency(T from, T to, double amount)
+    public double ConvertCurrencies(T from, T to, double amount)
     {
         if (!conversionRates.TryGetValue(from, out _) || (!conversionRates.TryGetValue(to, out _)))
             throw new Exception($"Conversion for '{from}' or/and '{to}' is undefined.");
