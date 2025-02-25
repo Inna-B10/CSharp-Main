@@ -38,9 +38,9 @@ class Program
             Console.WriteLine("5 kilometers in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.kilometers, 5)));
 
             var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
-            double result = currencyConverter.ConvertToBase(CurrencyUnits.NOK, 100);
+            double result = currencyConverter.ConvertDirect(CurrencyUnits.EUR, CurrencyUnits.NOK, 15);
             string convertedValue = FormatNumber(result);
-            Console.WriteLine("100 Norwegian Kroner in Dollars: " + convertedValue);
+            Console.WriteLine("15 Euro in Norwegian Kroner : " + convertedValue);
         }
         catch (ArgumentNullException arNull)
         {
@@ -55,17 +55,32 @@ class Program
     }
 }
 
-public class UnitConverter<TFrom>(Dictionary<TFrom, double> rates)
-where TFrom : notnull
+public class UnitConverter<T>(Dictionary<T, double> rates)
+where T : Enum
 {
-    private readonly Dictionary<TFrom, double> conversionRates = rates ?? throw new ArgumentNullException(nameof(rates));
+    private readonly Dictionary<T, double> conversionRates = rates ?? throw new ArgumentNullException(nameof(rates));
 
-    public double ConvertToBase(TFrom from, double quantity)
+    public double ConvertToBase(T from, double amount)
     {
         if (!conversionRates.TryGetValue(from, out double value))
             throw new Exception("Invalid unit provided for conversion.");
 
-        return value * quantity;
+        return amount / value;
+    }
+    public double ConvertFromBase(T to, double amount)
+    {
+        if (!conversionRates.TryGetValue(to, out double value))
+            throw new Exception("Invalid unit provided for conversion.");
+
+        return amount * value;
+    }
+    public double ConvertDirect(T from, T to, double amount)
+    {
+        if (!conversionRates.TryGetValue(from, out _) || (!conversionRates.TryGetValue(to, out _)))
+            throw new Exception("Invalid unit provided for conversion.");
+
+        double baseValue = ConvertToBase(from, amount);
+        return ConvertFromBase(to, baseValue);
     }
 }
 
