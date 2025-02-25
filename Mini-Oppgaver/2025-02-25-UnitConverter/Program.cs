@@ -27,10 +27,24 @@ class Program
         };
     static void Main()
     {
-        var lengthConverter = new UnitConverter<string>(LengthUnits);
+        try
+        {
 
-        Console.WriteLine("10 миль в метрах: " + lengthConverter.ConvertToMeters("miles", 10));
-        Console.WriteLine("5 километров в метрах: " + lengthConverter.ConvertToMeters("kilometers", 5));
+            var lengthConverter = new UnitConverter<string>(LengthUnits);
+            Console.WriteLine("10 миль в метрах: " + lengthConverter.ConvertToMeters("mils", 10));
+            Console.WriteLine("5 километров в метрах: " + lengthConverter.ConvertToMeters("kilometers", 5));
+        }
+        catch (ArgumentException arEx)
+        {
+            Console.WriteLine("Error: " + arEx.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+            throw;
+        }
+
+        Console.WriteLine("Hello");
     }
 }
 
