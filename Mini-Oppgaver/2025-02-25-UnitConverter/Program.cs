@@ -31,7 +31,12 @@ partial class Program
         };
   public static string FormatNumber(double value)
   {
-    return value.ToString("n", new CultureInfo("no-NO"));
+    var culture = new CultureInfo("no-NO");
+
+    // If the fractional part == 0, display without the decimal part, otherwise with two signs
+    return value % 1 == 0
+        ? value.ToString("N0", culture)  // "N0" -> format with thousands separators, no decimal part
+        : value.ToString("G", culture); // "N2" -> 2 decimal places (can be changed to "G" for auto)
   }
 
   static void Main()
@@ -39,10 +44,6 @@ partial class Program
 
     Console.WriteLine("Hello, user!");
     UserChoice();
-
-
-
-
 
     //         try
     //         {
@@ -77,35 +78,35 @@ partial class Program
       _ => ""
     };
   }
-  public static string[] ParseInput(string expression)
+  public static string[] ParseInput(string expression, string type)
   {
     expression = expression.Replace(",", ".");
-    Console.WriteLine(expression);
     // var match = Regex.Match(expression, @"^(\d+(\.\d+)?)([A-Za-z]+)=([A-Za-z]+)$");
     var match = ExpressionRegex().Match(expression);
     string amount = match.Groups[1].Value;
-    string from = match.Groups[3].Value;
-    string to = match.Groups[4].Value;
-    Console.WriteLine(amount);
+    string from = type == "length" ? ConvertUnitName(match.Groups[3].Value) : match.Groups[3].Value;
+    string to = type == "length" ? ConvertUnitName(match.Groups[4].Value) : match.Groups[4].Value;
+
     return [amount, from, to];
   }
   public static void LengthConverter()
   {
-    var lengthConverter = new UnitConverter<LengthUnits>(length);
     Console.WriteLine("4 values are available for conversion");
     Console.WriteLine("[m] meters, [k] kilometers, [l] miles, [f] feet");
     Console.WriteLine("valid format: from=to, f.ex to convert 5 kilometers to meters write 5k=m");
 
     string userInput = GetValidInput("length");
-    string[] expressionParts = ParseInput(userInput);
+    string[] expressionParts = ParseInput(userInput, "length");
     if (
-    Enum.TryParse(ConvertUnitName(expressionParts[1]), true, out LengthUnits fromUnit) &&
-    Enum.TryParse(ConvertUnitName(expressionParts[2]), true, out LengthUnits toUnit) &&
+    Enum.TryParse(expressionParts[1], true, out LengthUnits fromUnit) &&
+    Enum.TryParse(expressionParts[2], true, out LengthUnits toUnit) &&
     double.TryParse(expressionParts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double amount))
     {
       try
       {
+        var lengthConverter = new UnitConverter<LengthUnits>(length);
         string result = FormatNumber(lengthConverter.ConvertDirect(fromUnit, toUnit, amount));
+        Console.WriteLine($"{FormatNumber(amount)} {fromUnit} in {toUnit}: {result}");
       }
       catch (ArgumentNullException arNull)
       {
@@ -125,22 +126,30 @@ partial class Program
 
   public static void CurrencyConverter()
   {
-    try
+    Console.WriteLine("Currencies available for conversion: USD, EUR, NOK, ILS, GBP");
+    Console.WriteLine("Valid format: from=to, f.ex to convert 10 eur to nok write 10eur=nok");
+    string userInput = GetValidInput("currency");
+    Console.WriteLine(userInput);
+    string[] expressionParts = ParseInput(userInput, "currency");
+    if (
+      Enum.TryParse(expressionParts[1], true, out CurrencyUnits fromUnit) &&
+      Enum.TryParse(expressionParts[2], true, out CurrencyUnits toUnit) &&
+      double.TryParse(expressionParts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out double amount))
     {
-      var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
-      Console.WriteLine("Currencies available for conversion: USD, EUR, NOK, ILS, GBP");
-      Console.WriteLine("Valid format: from=to, f.ex to convert 10 eur to nok write 10eur=nok");
-      string userInput = GetValidInput("currency");
-      Console.WriteLine(userInput);
-      string[] expressionParts = ParseInput(userInput);
-    }
-    catch (ArgumentNullException arNull)
-    {
-      Console.WriteLine("Error: " + arNull.Message);
-    }
-    catch (Exception ex)
-    {
-      Console.WriteLine("Error: " + ex.Message);
+      try
+      {
+        var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
+        string result = FormatNumber(currencyConverter.ConvertCurrencies(fromUnit, toUnit, amount));
+        Console.WriteLine($"{FormatNumber(amount)} {fromUnit} in {toUnit}: {result}");
+      }
+      catch (ArgumentNullException arNull)
+      {
+        Console.WriteLine("Error: " + arNull.Message);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine("Error: " + ex.Message);
+      }
     }
   }
 
