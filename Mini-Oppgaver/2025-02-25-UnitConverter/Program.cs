@@ -38,6 +38,7 @@ partial class Program
         Console.WriteLine("Hello, user!");
         UserChoice();
 
+
         //         try
         //         {
         //             var lengthConverter = new UnitConverter<LengthUnits>(length);
@@ -68,7 +69,8 @@ partial class Program
             Console.WriteLine("4 values are available for conversion");
             Console.WriteLine("[m] meters, [k] kilometers, [l] miles, [f] feet");
             Console.WriteLine("valid format: from=to, f.ex to convert 5 kilometers to meters write 5k=m");
-            string result = GetValidInput("length");
+            string userInput = GetValidInput("length");
+            Console.WriteLine(userInput);
 
         }
         catch (ArgumentNullException arNull)
@@ -90,7 +92,8 @@ partial class Program
             var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
             Console.WriteLine("Currencies available for conversion: USD, EUR, NOK, ILS, GBP");
             Console.WriteLine("Valid format: from=to, f.ex to convert 10 eur to nok write 10eur=nok");
-            string result = GetValidInput("currency");
+            string userInput = GetValidInput("currency");
+            Console.WriteLine(userInput);
         }
         catch (ArgumentNullException arNull)
         {
@@ -107,7 +110,7 @@ partial class Program
     {
         Console.WriteLine("What do you want to convert? [1] length, [2] currency");
         string choice = GetValidInput("choice");
-        Console.WriteLine(choice);
+        //Console.WriteLine(choice);
         if (choice == "error")
         {
             Console.WriteLine("Some error occurred. The program is terminating.");
@@ -118,8 +121,9 @@ partial class Program
             LengthConverter();
 
         }
-        else Console.WriteLine("currency");
-        // CurrencyConverter();
+        else
+            //  Console.WriteLine("currency");
+            CurrencyConverter();
     }
     public static string GetValidInput(string type)
     {
@@ -127,6 +131,7 @@ partial class Program
         do
         {
             input = Console.ReadLine();
+            input = input?.Replace(" ", "");
             if (!IsValidInput(input, type))
             {
                 Console.WriteLine(GetErrorMessage(type));
@@ -152,15 +157,27 @@ partial class Program
         if (string.IsNullOrWhiteSpace(input))
         {
             return false;
-
         }
-        input = input.Replace(" ", "");
+        // input = input.Replace(" ", "");
         string[] parts = input.Split("=");
         if (parts.Length != 2)
         {
             return false;
         }
-        return Enum.TryParse(parts[0], true, out CurrencyUnits _) && Enum.TryParse(parts[1], true, out CurrencyUnits _);
+
+        return IsValidFormat(parts[0]) && Enum.TryParse(parts[1], true, out CurrencyUnits _);
+    }
+    private static bool IsValidFormat(string part)
+    {
+        var match = Regex.Match(part, @"^(\d+(\.\d+)?)([A-Za-z]+)$");
+
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        string currencyCode = match.Groups[3].Value;
+        return Enum.TryParse(currencyCode, true, out CurrencyUnits _);
     }
     public static bool IsValidInput(string? input, string type)
     {
@@ -183,8 +200,10 @@ partial class Program
         };
     }
 
-    [GeneratedRegex(@"^\d+([.,]\d+)?[mfklMFKL]=[mfklMFKL]$")]
+    [GeneratedRegex(@"^(\d+([.,]\d+)?)[mfklMFKL]=[mfklMFKL]$")]
     private static partial Regex LengthRegex();
+    // [GeneratedRegex(@"^(\d+([.,]\d+)?)([A-Za-z]+)$")]
+    // private static partial Regex AmountExistsRegex();
 }
 
 
