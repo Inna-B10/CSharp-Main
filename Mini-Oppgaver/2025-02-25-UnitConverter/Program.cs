@@ -37,11 +37,12 @@ class Program
         try
         {
             var lengthConverter = new UnitConverter<LengthUnits>(length);
-            Console.WriteLine("10 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.miles, 10)));
-            Console.WriteLine("5 kilometers in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.kilometers, 5)));
+            Console.WriteLine("2 miles in meters: " + FormatNumber(lengthConverter.ConvertToBase(LengthUnits.miles, 2)));
+            Console.WriteLine("100 meters in feet: " + FormatNumber(lengthConverter.ConvertFromBase(LengthUnits.feet, 100)));
+            Console.WriteLine("5 kilometers in miles: " + FormatNumber(lengthConverter.ConvertDirect(LengthUnits.kilometers, LengthUnits.miles, 5)));
 
             var currencyConverter = new UnitConverter<CurrencyUnits>(currency);
-            double result = currencyConverter.ConvertDirect(CurrencyUnits.EUR, CurrencyUnits.NOK, 15);
+            double result = currencyConverter.ConvertCurrency(CurrencyUnits.EUR, CurrencyUnits.NOK, 15);
             string convertedValue = FormatNumber(result);
             Console.WriteLine("15 Euro in Norwegian Kroner : " + convertedValue);
         }
@@ -68,14 +69,14 @@ where T : Enum
         if (!conversionRates.TryGetValue(from, out double value))
             throw new Exception($"Conversion for '{from}' is undefined.");
 
-        return amount / value;
+        return amount * value;
     }
     public double ConvertFromBase(T to, double amount)
     {
         if (!conversionRates.TryGetValue(to, out double value))
             throw new Exception($"Conversion for '{to}' is undefined.");
 
-        return amount * value;
+        return amount / value;
     }
     public double ConvertDirect(T from, T to, double amount)
     {
@@ -85,6 +86,15 @@ where T : Enum
         double baseValue = ConvertToBase(from, amount);
         return ConvertFromBase(to, baseValue);
     }
+    public double ConvertCurrency(T from, T to, double amount)
+    {
+        if (!conversionRates.TryGetValue(from, out _) || (!conversionRates.TryGetValue(to, out _)))
+            throw new Exception($"Conversion for '{from}' or/and '{to}' is undefined.");
+
+        return amount * (conversionRates[to] / conversionRates[from]);
+    }
+
+
 }
 
 
