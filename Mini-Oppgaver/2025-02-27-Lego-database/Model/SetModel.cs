@@ -22,23 +22,13 @@ public class SetModel
   [Required]
   public string ImgUrl { get; set; }
 
-  public SetModel(string csvLine)
+  public SetModel(string setNum, string name, int year, int themeId, int numParts, string imgUrl)
   {
-    var csvData = csvLine.Split(",");
-    SetNum = csvData[0];
-    Name = csvData[1];
-    if (int.TryParse(csvData[2], out int part2))
-    {
-      Year = part2;
-    }
-    if (int.TryParse(csvData[3], out int part3))
-    {
-      ThemeId = part3;
-    }
-    if (int.TryParse(csvData[4], out int part4))
-    {
-      NumParts = part4;
-    }
-    ImgUrl = csvData[5];
+    SetNum = setNum;
+    Name = name;
+    Year = year;
+    ThemeId = themeId;
+    NumParts = numParts;
+    ImgUrl = imgUrl;
   }
 }

@@ -12,17 +12,10 @@ public class ThemeModel
 
   public int ParentId { get; set; }
 
-  public ThemeModel(string csvLine)
+  public ThemeModel(int id, string name, int parentId)
   {
-    var csvData = csvLine.Split(",");
-    if (int.TryParse(csvData[0], out int part0))
-    {
-      Id = part0;
-    }
-    Name = csvData[1];
-    if (int.TryParse(csvData[2], out int part2))
-    {
-      ParentId = part2;
-    }
+    Id = id;
+    Name = name;
+    ParentId = parentId;
   }
 }

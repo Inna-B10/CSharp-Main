@@ -1,19 +1,23 @@
-﻿using _2025_02_27_Lego_database.Model;
-namespace _2025_02_27_Lego_database;
+﻿namespace _2025_02_27_Lego_database;
+using _2025_02_27_Lego_database.Model;
+using _2025_02_27_Lego_database.Services;
 
 class Program
 {
     static void Main(string[] args)
     {
-        var fileSets = new FileModel<SetModel>("./sets.csv", line => new SetModel(line));
-        var fileThemes = new FileModel<ThemeModel>("./themes.csv", line => new ThemeModel(line));
+        var fileService = new FileService();
+        var setService = new SetService();
+        var themeService = new ThemeService();
+
+        List<SetModel> sets = fileService.LoadData("./sets.csv", setService.ParseSets);
+        List<ThemeModel> themes = fileService.LoadData("./themes.csv", themeService.ParseThemes);
 
         // Console.WriteLine(file.Rows.Where(r => r.Year > 1980).Count());
 
         string? inputSet = Console.ReadLine()?.Trim();
-        string? inputTheme = Console.ReadLine()?.Trim();
 
-        List<SetModel> setResults = fileSets.Rows.Where(r => r.Name.Contains(inputSet, StringComparison.InvariantCultureIgnoreCase)).ToList();
+        List<SetModel> setResults = sets.Where(r => r.Name.Contains(inputSet, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         if (setResults.Count == 0)
         {
@@ -27,7 +31,9 @@ class Program
                 Console.WriteLine($"Name: {set.Name}, Set_num: {set.SetNum}");
             }
         }
-        List<ThemeModel> themeResults = [.. fileThemes.Rows.Where(r => r.Name.Contains(inputTheme, StringComparison.OrdinalIgnoreCase))];
+        string? inputTheme = Console.ReadLine()?.Trim();
+
+        List<ThemeModel> themeResults = [.. themes.Where(r => r.Name.Contains(inputTheme, StringComparison.OrdinalIgnoreCase))];
 
         if (themeResults.Count == 0)
         {
