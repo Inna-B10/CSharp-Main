@@ -1,3 +1,4 @@
+using System.Linq;
 using _2025_02_27_Lego_database.Models;
 using _2025_02_27_Lego_database.Services;
 using _2025_02_27_Lego_database.Views;
@@ -33,11 +34,23 @@ public class ControllerBase
       switch (menuChoice)
       {
         case "1":
-          Console.Write("Enter set name: ");
+          List<dynamic> setsResult = new();
+          string? searchSetName = null;
 
-          string? searchSetName = Console.ReadLine()?.Trim();
+          while (searchSetName == null)
+          {
+            Console.Write("Enter set name: ");
+            searchSetName = Console.ReadLine()?.Trim();
 
-          var setsResult = sets
+            if (string.IsNullOrWhiteSpace(searchSetName))
+            {
+              Console.WriteLine($"{StylesClass.ERROR}Invalid input!{StylesClass.RESET_ALL}");
+              searchSetName = null;
+              Console.WriteLine();
+            }
+          }
+
+          setsResult = sets
             .Where(s => s.Name.Contains(searchSetName, StringComparison.OrdinalIgnoreCase))
             .Select(s => new
             {
@@ -67,19 +80,55 @@ public class ControllerBase
               Console.WriteLine();
             }
           }
-          var yearResult = sets.Where(s => s.Year == year).Select(s => new
-          {
-            s,
-            ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
-            ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
-            ? themes[themes[s.ThemeId].ParentId.Value].Name : null
-          }).Cast<dynamic>()
+          var yearResult = sets
+            .Where(s => s.Year == year)
+            .Select(s => new
+            {
+              s,
+              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
+              ParentThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value1) && value1.ParentId.HasValue && themes.TryGetValue(value1.ParentId.Value, out ThemeModel? value2) ? value2.Name : null
+            }).Cast<dynamic>()
             .ToList();
           View.ShowSets(yearResult);
           break;
 
+        case "3":
+          string? searchThemeName = null;
+          List<dynamic> themeResult = new List<dynamic>();
 
+          var setsByTheme = sets
+                .GroupBy(s => s.ThemeId)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
+          while (searchThemeName == null)
+          {
+            Console.Write("Enter theme name: ");
+            searchThemeName = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(searchThemeName))
+            {
+              Console.WriteLine($"{StylesClass.ERROR}Invalid input!{StylesClass.RESET_ALL}");
+              searchThemeName = null;
+              Console.WriteLine();
+            }
+          }
+
+          var matchedThemes = themes.Values.Where(t => t.Name.Contains(searchThemeName, StringComparison.OrdinalIgnoreCase)).ToList();
+
+          if (matchedThemes.Count > 0)
+          {
+            themeResult = matchedThemes.Where(theme => setsByTheme.ContainsKey(theme.Id)).SelectMany(theme => setsByTheme[theme.Id].Select(s => new
+            {
+              s,
+              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
+              ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
+              ? themes[themes[s.ThemeId].ParentId.Value].Name : null
+            }))
+            .Cast<dynamic>()
+            .ToList();
+          }
+          View.ShowSets(themeResult);
+          break;
 
         case "0":
           Console.WriteLine("The program is terminating. Exit program.");
