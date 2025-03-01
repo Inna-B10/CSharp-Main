@@ -11,7 +11,7 @@ public class ThemeService
     return new ThemeModel(
       int.TryParse(csvData[0], out int id) ? id : 0,
       csvData[1],
-      int.TryParse(csvData[2], out int parentId) ? parentId : 0
+      int.TryParse(csvData[2], out int parentId) ? parentId : (int?)null
     );
   }
 }

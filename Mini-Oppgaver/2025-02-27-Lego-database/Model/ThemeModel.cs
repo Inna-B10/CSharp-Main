@@ -10,9 +10,9 @@ public class ThemeModel
   [Required]
   public string Name { get; set; }
 
-  public int ParentId { get; set; }
+  public int? ParentId { get; set; }
 
-  public ThemeModel(int id, string name, int parentId)
+  public ThemeModel(int id, string name, int? parentId)
   {
     Id = id;
     Name = name;
