@@ -9,6 +9,7 @@ public class View
   {
     Console.WriteLine("Menu:");
     Console.WriteLine("[1] Search sets by set name");
+    Console.WriteLine("[2] Search sets by year");
     Console.WriteLine("[0] Exit");
     Console.Write("Enter your choice: ");
   }
@@ -25,7 +26,7 @@ public class View
       foreach (var set in sets)
       {
         string cleanedName = set.s.Name.Trim().Trim('"'); //delete " in the beginning if exists / in the name
-        Console.WriteLine($"{StylesClass.VIOLET}Name: {cleanedName}, {StylesClass.GREEN}Set_num: {set.s.SetNum}, {StylesClass.ORANGE}Theme: {set.ThemeName}"
+        Console.WriteLine($"{StylesClass.VIOLET}Name: {cleanedName}, {StylesClass.GREEN}Set_num: {set.s.SetNum}, {StylesClass.CORAL}Year: {set.s.Year}, {StylesClass.GRAY}Num parts: {set.s.NumParts}, {StylesClass.ORANGE}Theme: {set.ThemeName}"
          + (set.ParentThemeName != null ? $", {StylesClass.BLUE}Parent theme: {set.ParentThemeName}" : ""));
       }
       Console.WriteLine(StylesClass.RESET_ALL);

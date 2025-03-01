@@ -52,6 +52,35 @@ public class ControllerBase
           View.ShowSets(setsResult);
           break;
 
+        case "2":
+          string? searchSetYear;
+          int year = 0;
+          while (year == 0)
+          {
+            Console.Write("Enter year of release (1949-2025): ");
+            searchSetYear = Console.ReadLine()?.Trim();
+
+            if (!int.TryParse(searchSetYear, out year) || year < 1949 || year > 2025)
+            {
+              Console.WriteLine($"{StylesClass.ERROR}Invalid input!{StylesClass.RESET_ALL}");
+              year = 0;
+              Console.WriteLine();
+            }
+          }
+          var yearResult = sets.Where(s => s.Year == year).Select(s => new
+          {
+            s,
+            ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
+            ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
+            ? themes[themes[s.ThemeId].ParentId.Value].Name : null
+          }).Cast<dynamic>()
+            .ToList();
+          View.ShowSets(yearResult);
+          break;
+
+
+
+
         case "0":
           Console.WriteLine("The program is terminating. Exit program.");
           Console.WriteLine();
