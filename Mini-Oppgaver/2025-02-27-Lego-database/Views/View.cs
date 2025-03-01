@@ -23,7 +23,8 @@ public class View
     {
       foreach (var set in sets)
       {
-        Console.WriteLine($"Name: {set.Name}, Set_num: {set.SetNum}");
+        string cleanedName = set.Name.Trim().Trim('"'); //delete " in the beginning if exists / in the name
+        Console.WriteLine($"Name: {cleanedName}, Set_num: {set.SetNum}");
       }
     }
   }
