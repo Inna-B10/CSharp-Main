@@ -1,7 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace _2025_02_27_Lego_database.Model;
+namespace _2025_02_27_Lego_database.Models;
 
 public class SetModel
 {

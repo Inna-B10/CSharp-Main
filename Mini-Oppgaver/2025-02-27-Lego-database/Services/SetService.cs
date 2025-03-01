@@ -1,5 +1,5 @@
 
-using _2025_02_27_Lego_database.Model;
+using _2025_02_27_Lego_database.Models;
 
 namespace _2025_02_27_Lego_database.Services;
 
