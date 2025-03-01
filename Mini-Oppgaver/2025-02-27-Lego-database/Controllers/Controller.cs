@@ -55,9 +55,8 @@ public class ControllerBase
             .Select(s => new
             {
               s,
-              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
-              ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
-              ? themes[themes[s.ThemeId].ParentId.Value].Name : null
+              ThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value) ? value.Name : "Unknown",
+              ParentThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value1) && value1.ParentId.HasValue && themes.TryGetValue(value1.ParentId.Value, out ThemeModel? value2) ? value2.Name : null
             })
             .Cast<dynamic>()
               .ToList();
@@ -120,14 +119,44 @@ public class ControllerBase
             themeResult = matchedThemes.Where(theme => setsByTheme.ContainsKey(theme.Id)).SelectMany(theme => setsByTheme[theme.Id].Select(s => new
             {
               s,
-              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
-              ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
-              ? themes[themes[s.ThemeId].ParentId.Value].Name : null
+              ThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value) ? value.Name : "Unknown",
+              ParentThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value1) && value1.ParentId.HasValue && themes.TryGetValue(value1.ParentId.Value, out ThemeModel? value2) ? value2.Name : null
             }))
             .Cast<dynamic>()
             .ToList();
           }
           View.ShowSets(themeResult);
+          break;
+
+        case "4":
+          List<dynamic> setNumResult = new();
+          string? searchSetNum = null;
+
+          while (searchSetNum == null)
+          {
+            Console.Write("Enter set number: ");
+            searchSetNum = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(searchSetNum))
+            {
+              Console.WriteLine($"{StylesClass.ERROR}Invalid input!{StylesClass.RESET_ALL}");
+              searchSetNum = null;
+              Console.WriteLine();
+            }
+          }
+
+          setNumResult = sets
+            .Where(s => string.Equals(s.SetNum, searchSetNum, StringComparison.OrdinalIgnoreCase))
+            .Select(s => new
+            {
+              s,
+              ThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value) ? value.Name : "Unknown",
+              ParentThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value1) && value1.ParentId.HasValue && themes.TryGetValue(value1.ParentId.Value, out ThemeModel? value2) ? value2.Name : null
+            })
+            .Cast<dynamic>()
+              .ToList();
+
+          View.ShowSets(setNumResult);
           break;
 
         case "0":

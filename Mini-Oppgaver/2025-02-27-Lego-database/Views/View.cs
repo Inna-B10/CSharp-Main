@@ -8,6 +8,7 @@ public class View
     Console.WriteLine("[1] Search sets by set name");
     Console.WriteLine("[2] Search sets by year");
     Console.WriteLine("[3] Search sets by theme name");
+    Console.WriteLine("[4] Search sets by set number");
     Console.WriteLine("[0] Exit");
     Console.Write("Enter your choice: ");
   }
