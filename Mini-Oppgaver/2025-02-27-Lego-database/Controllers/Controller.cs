@@ -29,23 +29,29 @@ public class ControllerBase
     {
       View.ShowMenu();
       string? menuChoice = Console.ReadLine()?.Trim();
+      Console.WriteLine();
 
       switch (menuChoice)
       {
         case "1":
           Console.Write("Enter set name: ");
+
           string? searchSetName = Console.ReadLine()?.Trim();
+
           List<SetModel> setsResult = sets.Where(s => s.Name.Contains(searchSetName, StringComparison.OrdinalIgnoreCase)).ToList();
+
           View.ShowSets(setsResult);
           break;
 
         case "0":
-          Console.WriteLine("The program is terminating. Exit.");
+          Console.WriteLine("The program is terminating. Exit program.");
+          Console.WriteLine();
           isRunning = false;
           break;
 
         default:
-          Console.WriteLine("Invalid input!");
+          Console.WriteLine($"{StylesClass.ERROR}Invalid input!{StylesClass.RESET_ALL}");
+          Console.WriteLine();
           break;
       }
     }
