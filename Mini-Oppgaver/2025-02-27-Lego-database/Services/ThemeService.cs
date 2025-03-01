@@ -4,6 +4,19 @@ namespace _2025_02_27_Lego_database.Services;
 
 public class ThemeService
 {
+  private readonly FileService _fileService;
+
+  public ThemeService(FileService fileService)
+  {
+    _fileService = fileService;
+  }
+
+  public Dictionary<int, ThemeModel> LoadThemes(string filePath)
+  {
+    var themes = _fileService.LoadData(filePath, ParseThemes);
+
+    return themes.ToDictionary(t => t.Id);
+  }
   public ThemeModel ParseThemes(string csvLine)
   {
     var csvData = csvLine.Split(",");

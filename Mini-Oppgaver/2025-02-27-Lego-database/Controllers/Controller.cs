@@ -1,4 +1,3 @@
-using System.ComponentModel.Design;
 using _2025_02_27_Lego_database.Models;
 using _2025_02_27_Lego_database.Services;
 using _2025_02_27_Lego_database.Views;
@@ -8,17 +7,17 @@ namespace _2025_02_27_Lego_database.Controllers;
 public class ControllerBase
 {
   private List<SetModel> sets;
-  private List<ThemeModel> themes;
+  private Dictionary<int, ThemeModel> themes;
 
   public ControllerBase(string setsFilePath, string themesFilePath)
   {
     var fileService = new FileService();
     var setService = new SetService();
-    var themeService = new ThemeService();
+    var themeService = new ThemeService(fileService);
 
     sets = fileService.LoadData("./sets.csv", setService.ParseSets);
 
-    themes = fileService.LoadData("./themes.csv", themeService.ParseThemes);
+    themes = themeService.LoadThemes(themesFilePath);
   }
 
   public void Start()
@@ -38,7 +37,17 @@ public class ControllerBase
 
           string? searchSetName = Console.ReadLine()?.Trim();
 
-          List<SetModel> setsResult = sets.Where(s => s.Name.Contains(searchSetName, StringComparison.OrdinalIgnoreCase)).ToList();
+          var setsResult = sets
+            .Where(s => s.Name.Contains(searchSetName, StringComparison.OrdinalIgnoreCase))
+            .Select(s => new
+            {
+              s,
+              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
+              ParentThemeName = themes.ContainsKey(s.ThemeId) && themes[s.ThemeId].ParentId.HasValue && themes.ContainsKey(themes[s.ThemeId].ParentId.Value)
+              ? themes[themes[s.ThemeId].ParentId.Value].Name : null
+            })
+            .Cast<dynamic>()
+              .ToList();
 
           View.ShowSets(setsResult);
           break;

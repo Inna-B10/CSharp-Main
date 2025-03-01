@@ -13,7 +13,7 @@ public class View
     Console.Write("Enter your choice: ");
   }
 
-  public static void ShowSets(List<SetModel> sets)
+  public static void ShowSets(List<dynamic> sets)
   {
     if (sets.Count == 0)
     {
@@ -24,10 +24,11 @@ public class View
     {
       foreach (var set in sets)
       {
-        string cleanedName = set.Name.Trim().Trim('"'); //delete " in the beginning if exists / in the name
-        Console.WriteLine($"{StylesClass.BLUE}Name: {cleanedName}, {StylesClass.GREEN}Set_num: {set.SetNum}{StylesClass.RESET_ALL}");
+        string cleanedName = set.s.Name.Trim().Trim('"'); //delete " in the beginning if exists / in the name
+        Console.WriteLine($"{StylesClass.VIOLET}Name: {cleanedName}, {StylesClass.GREEN}Set_num: {set.s.SetNum}, {StylesClass.ORANGE}Theme: {set.ThemeName}"
+         + (set.ParentThemeName != null ? $", {StylesClass.BLUE}Parent theme: {set.ParentThemeName}" : ""));
       }
-      Console.WriteLine();
+      Console.WriteLine(StylesClass.RESET_ALL);
     }
   }
 }

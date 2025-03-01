@@ -10,6 +10,8 @@ public static class StylesClass
   //   public const string RESET_INVERSE = "\x1B[27m";
   public const string RESET_ALL = "\x1b[0m";
   public const string ERROR = "\x1B[38;5;196m\x1B[48;5;189m";
-  public const string BLUE = "\x1B[38;5;46m";
-  public const string GREEN = "\x1B[38;5;27m";
+  public const string GREEN = "\x1B[38;5;46m";
+  public const string BLUE = "\x1B[38;5;27m";
+  public const string ORANGE = "\x1B[38;5;202m";
+  public const string VIOLET = "\x1B[38;5;55m";
 }
