@@ -2,9 +2,9 @@
 namespace _2025_02_27_Lego_database.Services;
 
 
-public class FileService
+public class DataService
 {
-  public List<T> LoadData<T>(string filePath, Func<string, T> parser)
+  public static List<T> LoadData<T>(string filePath, Func<string, T> parser)
   where T : class
   {
     var rows = new List<T>();

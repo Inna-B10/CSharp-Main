@@ -7,18 +7,14 @@ namespace _2025_02_27_Lego_database.Controllers;
 
 public class ControllerBase
 {
-  private List<SetModel> sets;
-  private Dictionary<int, ThemeModel> themes;
+  private readonly List<SetModel> sets;
+  private readonly Dictionary<int, ThemeModel> themes;
 
   public ControllerBase(string setsFilePath, string themesFilePath)
   {
-    var fileService = new FileService();
-    var setService = new SetService();
-    var themeService = new ThemeService(fileService);
+    sets = DataService.LoadData(setsFilePath, SetService.ParseSets);
 
-    sets = fileService.LoadData("./sets.csv", setService.ParseSets);
-
-    themes = themeService.LoadThemes(themesFilePath);
+    themes = ThemeService.LoadThemes(themesFilePath);
   }
 
   public void Start()
@@ -34,7 +30,7 @@ public class ControllerBase
       switch (menuChoice)
       {
         case "1":
-          List<dynamic> setsResult = new();
+          List<dynamic> setsResult = [];
           string? searchSetName = null;
 
           while (searchSetName == null)
@@ -84,7 +80,7 @@ public class ControllerBase
             .Select(s => new
             {
               s,
-              ThemeName = themes.ContainsKey(s.ThemeId) ? themes[s.ThemeId].Name : "Unknown",
+              ThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value) ? value.Name : "Unknown",
               ParentThemeName = themes.TryGetValue(s.ThemeId, out ThemeModel? value1) && value1.ParentId.HasValue && themes.TryGetValue(value1.ParentId.Value, out ThemeModel? value2) ? value2.Name : null
             }).Cast<dynamic>()
             .ToList();
@@ -93,7 +89,7 @@ public class ControllerBase
 
         case "3":
           string? searchThemeName = null;
-          List<dynamic> themeResult = new List<dynamic>();
+          List<dynamic> themeResult = [];
 
           var setsByTheme = sets
                 .GroupBy(s => s.ThemeId)
@@ -129,7 +125,7 @@ public class ControllerBase
           break;
 
         case "4":
-          List<dynamic> setNumResult = new();
+          List<dynamic> setNumResult = [];
           string? searchSetNum = null;
 
           while (searchSetNum == null)

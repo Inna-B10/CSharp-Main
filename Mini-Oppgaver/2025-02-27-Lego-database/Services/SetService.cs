@@ -5,7 +5,7 @@ namespace _2025_02_27_Lego_database.Services;
 
 public class SetService
 {
-  public SetModel ParseSets(string csvLine)
+  public static SetModel ParseSets(string csvLine)
   {
     var csvData = csvLine.Split(",");
 
