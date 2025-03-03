@@ -12,17 +12,20 @@ public class ThemeService
     _DataService = DataService;
   }
 
+  //create Dictionary to quickly get the theme name by ThemeId
   public static Dictionary<int, ThemeModel> LoadThemes(string filePath)
   {
-    var themes = DataService.LoadData(filePath, ParseThemes);
+    var themes = DataService.LoadData(filePath, ParseThemeLine); //path, function parser
 
-    return themes.ToDictionary(t => t.Id);
+    return themes.ToDictionary(t => t.ThemeId);
   }
-  public static ThemeModel? ParseThemes(string csvLine, int lineNum, string filePath)
+  public static ThemeModel? ParseThemeLine(string csvLine, int lineNum, string filePath)
   {
     try
     {
       var csvData = csvLine.Split(",");
+
+      //if line does not match ThemeModel format return null (no error for continue parsing other lines)
       if (csvData.Length < 3)
       {
         Console.WriteLine($"{StylesClass.ERROR}File {filePath}: Line {lineNum} has invalid format and was not parsed: '{csvLine}' {StylesClass.RESET_ALL}");
@@ -31,7 +34,7 @@ public class ThemeService
       }
 
       return new ThemeModel(
-        int.TryParse(csvData[0], out int id) ? id : 0,
+        int.TryParse(csvData[0], out int themeId) ? themeId : 0,
         csvData[1],
         int.TryParse(csvData[2], out int parentId) ? parentId : (int?)null
       );

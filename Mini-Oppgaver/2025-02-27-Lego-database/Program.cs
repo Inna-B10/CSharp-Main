@@ -13,7 +13,8 @@ class Program
         Console.WriteLine($"{StylesClass.BLUE}{StylesClass.INVERSE} Welcome to Lego database! {StylesClass.RESET_ALL}");
         Console.WriteLine();
 
-        ControllerBase controller = new ControllerBase(setsFilePath, themesFilePath);
+        //Load data from files
+        BaseController controller = new BaseController(setsFilePath, themesFilePath);
 
         controller.Start();
     }

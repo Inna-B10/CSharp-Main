@@ -10,7 +10,7 @@ public class DataService
   public static List<T> LoadData<T>(string filePath, Func<string, int, string, T?> parser)
   where T : class
   {
-    var rows = new List<T>();
+    var rows = new List<T>(); //create new list, if no result return empty list
 
     if (!File.Exists(filePath))
     {
@@ -22,7 +22,7 @@ public class DataService
     var lines = File.ReadAllLines(filePath);
     for (int i = 0; i < lines.Length; i++)
     {
-      var item = parser(lines[i], i + 1, filePath); //lines in file are numbered from 1!
+      var item = parser(lines[i], i + 1, filePath); //NB  lines in file are numbered from 1!
       if (item != null)
       {
         rows.Add(item);
@@ -42,5 +42,4 @@ public class DataService
 
     return rows;
   }
-
 }
