@@ -1,4 +1,6 @@
 
+using _2025_02_27_Lego_database.Views;
+
 namespace _2025_02_27_Lego_database.Services;
 
 
@@ -11,8 +13,9 @@ public class DataService
 
     if (!File.Exists(filePath))
     {
-      Console.WriteLine($"The file {filePath} was not found!");
-      return rows;
+      Console.Write($"{StylesClass.ERROR}Error: The file {filePath} was not found!{StylesClass.RESET_ALL}");
+
+      Environment.Exit(0); //Forced exit from the program
     }
 
     var lines = File.ReadAllLines(filePath);

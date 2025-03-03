@@ -10,10 +10,11 @@ class Program
         string setsFilePath = "./sets.csv";
         string themesFilePath = "./themes.csv";
 
-        ControllerBase controller = new ControllerBase(setsFilePath, themesFilePath);
-
         Console.WriteLine($"{StylesClass.BLUE}{StylesClass.INVERSE} Welcome to Lego database! {StylesClass.RESET_ALL}");
         Console.WriteLine();
+
+        ControllerBase controller = new ControllerBase(setsFilePath, themesFilePath);
+
         controller.Start();
     }
 }
