@@ -25,9 +25,8 @@ public class View
     {
       foreach (var set in sets)
       {
-        string cleanedName = set.s.SetName.Trim().Trim('"'); //delete " in the beginning if exists / in the name
-
-        Console.WriteLine($"{StylesClass.VIOLET}Name: {cleanedName}, {StylesClass.GREEN}Set_num: {set.s.SetNum}, {StylesClass.CORAL}Year: {set.s.Year}, {StylesClass.GRAY}Num parts: {set.s.NumParts}, {StylesClass.RED}Theme: {set.ThemeName}"
+        string cleanedName = set.s.Name.Trim().Trim('"'); //delete " in the beginning if exists / in the name
+        Console.WriteLine($"{StylesClass.VIOLET}Set name: {cleanedName}, {StylesClass.GREEN}Set num: {set.s.SetNum}, {StylesClass.CORAL}Year: {set.s.Year}, {StylesClass.GRAY}Num parts: {set.s.NumParts}, {StylesClass.RED}Theme: {set.ThemeName}"
          + (set.ParentThemeName != null ? $", {StylesClass.BLUE}Parent theme: {set.ParentThemeName}" : ""));
       }
       Console.WriteLine();
