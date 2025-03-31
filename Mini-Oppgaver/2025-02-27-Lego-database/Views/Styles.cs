@@ -9,4 +9,5 @@ public static class StylesClass
   public const string VIOLET = "\x1B[38;5;55m";
   public const string CORAL = "\x1B[38;5;9m";
   public const string GRAY = "\x1B[38;5;8m";
+  public const string INVERSE = "\x1B[7m";
 }

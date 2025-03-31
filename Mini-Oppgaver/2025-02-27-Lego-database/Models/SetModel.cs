@@ -9,7 +9,7 @@ public class SetModel
   public string SetNum { get; set; }
 
   [Required]
-  public string Name { get; set; }
+  public string SetName { get; set; }
 
   [Required]
   public int Year { get; set; }
@@ -22,10 +22,10 @@ public class SetModel
   [Required]
   public string ImgUrl { get; set; }
 
-  public SetModel(string setNum, string name, int year, int themeId, int numParts, string imgUrl)
+  public SetModel(string setNum, string setName, int year, int themeId, int numParts, string imgUrl)
   {
     SetNum = setNum;
-    Name = name;
+    SetName = setName;
     Year = year;
     ThemeId = themeId;
     NumParts = numParts;

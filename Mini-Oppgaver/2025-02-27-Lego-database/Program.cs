@@ -1,32 +1,20 @@
 ﻿namespace _2025_02_27_Lego_database;
 
 using _2025_02_27_Lego_database.Controllers;
+using _2025_02_27_Lego_database.Views;
 
 class Program
 {
     static void Main(string[] args)
     {
-
-        //         string? inputTheme = Console.ReadLine()?.Trim();
-        // 
-        //         List<ThemeModel> themeResults = [.. themes.Where(r => r.Name.Contains(inputTheme, StringComparison.OrdinalIgnoreCase))];
-        // 
-        //         if (themeResults.Count == 0)
-        //         {
-        //             Console.WriteLine("No matches found");
-        //         }
-        //         else
-        //         {
-        //             foreach (var theme in themeResults)
-        //             {
-        //                 Console.WriteLine($"Category name: {theme.Name}");
-        //             }
-        //         }
-
         string setsFilePath = "./sets.csv";
         string themesFilePath = "./themes.csv";
 
-        ControllerBase controller = new ControllerBase(setsFilePath, themesFilePath);
+        Console.WriteLine($"{StylesClass.BLUE}{StylesClass.INVERSE} Welcome to Lego database! {StylesClass.RESET_ALL}");
+        Console.WriteLine();
+
+        //Load data from files
+        BaseController controller = new BaseController(setsFilePath, themesFilePath);
 
         controller.Start();
     }
