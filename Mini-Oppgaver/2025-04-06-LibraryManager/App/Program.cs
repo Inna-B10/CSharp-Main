@@ -1,2 +1,15 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Core.Classes.Controllers;
+using Core.Classes.Models;
+using Core.Classes.Services;
+using Core.Classes.Views;
+
+namespace App;
+class Program
+{
+  static void Main(string[] args)
+  {
+    var startProgram = new LibraryController(new BookService(), new ViewGenerator());
+    startProgram.Run();
+
+  }
+}

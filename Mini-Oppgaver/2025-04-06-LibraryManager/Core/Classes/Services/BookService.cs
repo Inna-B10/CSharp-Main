@@ -1,9 +1,9 @@
 using System;
 using Core.Interfaces;
 
-namespace Core.Classes.Controllers;
+namespace Core.Classes.Services;
 
-public class BookManager : IBookManager
+public class BookService : IBookService
 {
   private readonly List<IBook> _books = [];
   public bool AddBook(IBook book)

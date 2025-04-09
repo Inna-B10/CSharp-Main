@@ -2,7 +2,7 @@ using System;
 
 namespace Core.Interfaces;
 
-public interface IBookManager
+public interface IBookService
 {
   bool AddBook(IBook book);
   List<IBook> GetAllBooks();
