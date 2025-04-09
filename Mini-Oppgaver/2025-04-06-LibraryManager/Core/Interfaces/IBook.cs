@@ -4,12 +4,12 @@ namespace Core.Interfaces;
 
 public interface IBook
 {
-  int Id { get; set; }
+  int Id { get; init; }
   string Title { get; set; }
   string Author { get; set; }
   bool IsBorrowed { get; set; }
   DateTime? DueDate { get; set; }
 
-  void MarkAsBorrowed();
+  void MarkAsBorrowed(DateTime dueDate);
   void MarkAsReturned();
 }
