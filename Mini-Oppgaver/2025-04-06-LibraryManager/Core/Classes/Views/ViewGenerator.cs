@@ -21,9 +21,7 @@ public class ViewGenerator : IViewGenerator
                 7. View Borrowed Books
                 0. Exit
         
-        ============================================
-
-        Enter your choice:
+        ============================================        
         """);
   }
 
@@ -74,9 +72,9 @@ public class ViewGenerator : IViewGenerator
     );
   }
 
-  public string GetInput(string prompt)
+  public string GetInput(string text)
   {
-    Console.WriteLine($"{prompt}: ");
+    Console.Write(text);
     return Console.ReadLine() ?? "";
   }
 }
