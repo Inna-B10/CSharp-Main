@@ -61,27 +61,7 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
     }
   }
 
-  private void ViewBorrowedBooks()
-  {
-    throw new NotImplementedException();
-  }
-
-  private void GetBookById()
-  {
-    throw new NotImplementedException();
-  }
-
-  private void GetAllBooks()
-  {
-    throw new NotImplementedException();
-  }
-
-  private void DeleteBook()
-  {
-    throw new NotImplementedException();
-  }
-
-  private void ReturnBook()
+  private bool AddBook()
   {
     throw new NotImplementedException();
   }
@@ -90,9 +70,36 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
   {
     throw new NotImplementedException();
   }
-
-  private void AddBook()
+  private void ReturnBook()
   {
     throw new NotImplementedException();
   }
+
+  private void DeleteBook()
+  {
+    throw new NotImplementedException();
+  }
+  private void GetAllBooks()
+  {
+    var books = _service.GetAllBooks();
+    _view.ViewAllBooks(books);
+  }
+  private void GetBookById()
+  {
+    var bookId = _view.GetInput("Enter book Id to get details");
+    int id;
+    while (!int.TryParse(bookId, out id))
+    {
+      bookId = _view.GetInput("Invalid input. Enter numeric whole number");
+    }
+    var book = _service.GetBookById(id);
+
+    _view.ViewBookDetails(book);
+  }
+
+  private void ViewBorrowedBooks()
+  {
+    throw new NotImplementedException();
+  }
+
 }

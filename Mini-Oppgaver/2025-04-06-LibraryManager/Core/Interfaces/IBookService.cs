@@ -4,7 +4,7 @@ namespace Core.Interfaces;
 
 public interface IBookService
 {
-  bool AddBook(IBook book);
+  bool AddBook(string title, string author);
   List<IBook> GetAllBooks();
   IBook? GetBookById(int id);
   bool BorrowBook(int id, DateTime dueDate);

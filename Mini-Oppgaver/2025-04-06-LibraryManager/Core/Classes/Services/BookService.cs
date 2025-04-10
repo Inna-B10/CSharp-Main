@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using Core.Classes.Models;
 using Core.Interfaces;
 
 namespace Core.Classes.Services;
@@ -6,12 +8,24 @@ namespace Core.Classes.Services;
 public class BookService : IBookService
 {
   private readonly List<IBook> _books = [];
-  public bool AddBook(IBook book)
+  private int _nextId;
+  public bool AddBook(string title, string author)
   {
-    if (!_books.Any(b => b.Id == book.Id)) return false;
-
-    _books.Add(book);
-    return true;
+    //     if (!_books.Any(b => b.Id == book.Id)) return false;
+    // 
+    //     _books.Add(book);
+    //     return true;
+    try
+    {
+      var newBook = new Book(++_nextId, title, author);
+      _books.Add(newBook);
+      return true;
+    }
+    catch
+    {
+      Console.WriteLine("Failed to add a new book!");
+      return false;
+    }
   }
 
   public List<IBook> GetAllBooks()

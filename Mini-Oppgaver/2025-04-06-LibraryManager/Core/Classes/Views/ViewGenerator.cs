@@ -54,7 +54,8 @@ public class ViewGenerator : IViewGenerator
 
     if (books.Count == 0)
     {
-      Console.WriteLine("No books found");
+      Console.WriteLine("No records found! Press any key to continue...");
+      Console.ReadKey();
       return;
     }
     Console.WriteLine("""
