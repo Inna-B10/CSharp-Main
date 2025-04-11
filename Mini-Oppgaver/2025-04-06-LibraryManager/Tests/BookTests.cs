@@ -4,7 +4,7 @@ namespace Tests;
 public class BookTests
 {
     //* ----------------------------- Set_Properties ----------------------------- */
-    [Fact(DisplayName = "Should set properties correctly")]
+    [Fact(DisplayName = "Book_Constructor: Should set properties correctly")]
     public void Book_Constructor_Test()
     {
         // Arrange

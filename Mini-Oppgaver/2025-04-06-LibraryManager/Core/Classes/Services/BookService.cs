@@ -8,6 +8,7 @@ namespace Core.Classes.Services;
 public class BookService : IBookService
 {
   private readonly List<IBook> _books = [];
+  public int Count => _books.Count;
   private int _nextId;
 
   //* --------------------------------- AddBook -------------------------------- */
@@ -49,7 +50,9 @@ public class BookService : IBookService
   //* ------------------------------- DeleteBook ------------------------------- */
   public bool DeleteBook(int id)
   {
-    throw new NotImplementedException();
+    var book = _books.FirstOrDefault(book => book.Id == id);
+    if (book is null) return false;
+    return _books.Remove(book);
   }
   //* ------------------------------- GetAllBooks ------------------------------ */
   public List<IBook> GetAllBooks()
@@ -63,10 +66,20 @@ public class BookService : IBookService
     return _books.FirstOrDefault(b => b.Id == id);
   }
 
-  //* ---------------------------- GetBorrowedBooks ---------------------------- */
-  public List<IBook> GetBorrowedBooks()
+  //* ---------------------------- GetAllBorrowedBooks ---------------------------- */
+  public List<IBook> GetAllBorrowedBooks()
   {
-    return [.. _books.Where(book => book.IsBorrowed == true)];
+    return [.. _books
+    .Where(book => book.IsBorrowed)
+    .OrderBy(book => book.DueDate)];
+  }
+
+  //* ----------------------- GetBooksWithExpiredDueDate ----------------------- */
+  public List<IBook> GetBooksWithExpiredDueDate()
+  {
+    return [.. _books
+    .Where(book => book.IsBorrowed && book.DueDate < DateTime.Today)
+    .OrderBy(book => book.DueDate)];
   }
 
   //* ----------------------------- MarkAsBorrowed ----------------------------- */

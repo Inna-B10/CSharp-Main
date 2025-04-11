@@ -10,7 +10,8 @@ public interface IBookService
   bool DeleteBook(int id);
   List<IBook> GetAllBooks();
   IBook? GetBookById(int id);
-  List<IBook> GetBorrowedBooks();
+  List<IBook> GetAllBorrowedBooks();
+  List<IBook> GetBooksWithExpiredDueDate();
   DateTime MarkAsBorrowed(IBook book);
   void MarkAsReturned(IBook book);
 }

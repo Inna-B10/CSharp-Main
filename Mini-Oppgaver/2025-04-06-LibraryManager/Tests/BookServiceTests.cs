@@ -13,12 +13,22 @@ public class BookServiceTests
     _service.AddBook("Brave New World", "Aldous Huxley");
     _service.AddBook("To Kill a Mockingbird", "Harper Lee");
   }
+  //* ---------------------- Test BookService Constructor ---------------------- */
+  [Fact(DisplayName = "Constructor: Should set initial data and sync Count with collection")]
+  public void BookService_Test_Constructor_Initial_Values()
+  {
+    //Assert
+    Assert.Equal(3, _service.Count);
+    Assert.Equal(3, _service.GetAllBooks().Count);
+    Assert.Equal(_service.Count, _service.GetAllBooks().Count);
+  }
 
   //* ------------------------------ Test AddBook ------------------------------ */
   [Fact(DisplayName = "AddBook: Should return TRUE if book added")]
   public void AddBook_Test()
   {
     //Arrange
+    int count = _service.Count;
     var title = "Pride and Prejudice";
     var author = "Jane Austen";
 
@@ -27,6 +37,7 @@ public class BookServiceTests
 
     //Assert
     Assert.True(result);
+    Assert.Equal(_service.Count, count + 1);
   }
 
   //* --------------------- Test GetBookById With Valid Id --------------------- */
@@ -58,20 +69,37 @@ public class BookServiceTests
     Assert.Null(book);
   }
 
-  /* -------------------------- Test GetBorrowedBooks ------------------------- */
-  //   [Fact(DisplayName = "Should return list only of borrowed books")]
-  //   public void GetBorrowedBooks_Test()
-  //   {
-  // //Arrange
-  // int id = 1;
-  // _service.BorrowBook(id);
-  // 
-  // //Act
-  // var borrowedBooks= _service.GetBorrowedBooks();
-  // 
-  // //Assert
-  // Assert.All(borrowedBooks, book=>Assert.True(book.IsBorrowed));
-  //   }
+  //* ------------------------ Test GetAllBorrowedBooks ------------------------ */
+  [Fact(DisplayName = "GetAllBorrowedBooks: Should return list only of borrowed books with all dates")]
+  public void GetAllBorrowedBooks_Test_All_Dates()
+  {
+    //Arrange
+    int id = 1;
+    _service.BorrowBook(id);
+
+    //Act
+    var borrowedBooks = _service.GetAllBorrowedBooks();
+
+    //Assert
+    Assert.All(borrowedBooks, book => Assert.True(book.IsBorrowed));
+  }
+
+  //* --------------------- Test GetBooksWithExpiredDueDate -------------------- */
+  [Fact(DisplayName = "GetBooksWithExpiredDueDate: Should return list only of borrowed books with expired dueDate")]
+  public void GetBooksWithExpiredDueDate_Test_With_Expired_DueDate()
+  {
+    //Arrange
+    int id = 1;
+    _service.BorrowBook(id);
+    var book = _service.GetBookById(id);
+    book!.DueDate = DateTime.Today.AddDays(-2);
+
+    //Act
+    var expiredBooks = _service.GetBooksWithExpiredDueDate();
+
+    //Assert
+    Assert.All(expiredBooks, book => Assert.True(book.IsBorrowed && book.DueDate < DateTime.Today));
+  }
 
   //* ---------------------- Test BorrowBook With Valid Id --------------------- */
   [Fact(DisplayName = "BorrowBook: Should return new dueDate")]
@@ -197,5 +225,38 @@ public class BookServiceTests
     //Assert
     Assert.False(book.IsBorrowed);
     Assert.Null(book.DueDate);
+  }
+
+  //* ---------------------- Test DeleteBook With Valid Id --------------------- */
+  [Fact(DisplayName = "Should remove book from _books and return TRUE")]
+  public void DeleteBook_Test_With_Valid_Id()
+  {
+    //Arrange
+    int id = 1;
+    var count = _service.Count;
+
+    //Act
+    var result = _service.DeleteBook(id);
+
+    //Assert
+    Assert.True(result);
+    Assert.Null(_service.GetBookById(id));
+    Assert.Equal(_service.Count, count - 1);
+  }
+
+  //* --------------------- Test DeleteBook With Invalid Id -------------------- */
+  [Fact(DisplayName = "Should return FALSE")]
+  public void DeleteBook_Test_With_Invalid_Id()
+  {
+    //Arrange
+    int invalidId = 99;
+    var count = _service.Count;
+
+    //Act
+    var result = _service.DeleteBook(invalidId);
+
+    //Assert
+    Assert.False(result);
+    Assert.Equal(_service.Count, count);
   }
 }

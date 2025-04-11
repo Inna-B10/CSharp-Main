@@ -22,9 +22,7 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
         {
           break;
         }
-        Console.ForegroundColor = ConsoleColor.DarkRed;
-        Console.WriteLine("Invalid input. Please enter a number.");
-        Console.ResetColor();
+        Console.WriteLine("Invalid input. Please enter a whole number.");
       }
       switch (userChoice)
       {
@@ -47,21 +45,22 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
           GetBookById();
           break;
         case 7:
-          GetBorrowedBooks();
+          GetAllBorrowedBooks();
+          break;
+        case 8:
+          GetBooksWithExpiredDueDate();
           break;
         case 0:
           return;
         default:
-          Console.ForegroundColor = ConsoleColor.DarkRed;
-          Console.WriteLine("Invalid Choice. Press any key to continue....");
-          Console.ResetColor();
+          Console.WriteLine("Invalid Choice. Press any key to continue...");
           Console.ReadKey();
           break;
       }
     }
   }
 
-  /* --------------------------------- AddBook -------------------------------- */
+  //* --------------------------------- AddBook -------------------------------- */
   private void AddBook()
   {
     var title = _view.GetValidInput("Enter book's title: ");
@@ -70,17 +69,17 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
     var result = _service.AddBook(title, author);
     if (result == true)
     {
-      Console.WriteLine($"Book was added successfully! \nPress any key to continue...");
-      Console.ReadKey();
+      Console.WriteLine($"Book was added successfully!");
     }
     else
     {
-      Console.WriteLine($"Couldn't to add a new book. \nPress any key to continue...");
-      Console.ReadKey();
+      Console.WriteLine($"Couldn't to add a new book.");
     }
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadKey();
   }
 
-  /* ------------------------------- BorrowBook ------------------------------- */
+  //* ------------------------------- BorrowBook ------------------------------- */
   private void BorrowBook()
   {
     string input = _view.GetValidInput("Enter valid numeric id of the book you want to borrow: ");
@@ -92,40 +91,76 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
     var result = _service.BorrowBook(id);
     if (result == null)
     {
-      Console.WriteLine("Cannot register current book as borrowed");
+      Console.WriteLine("Cannot register current book as borrowed. Take contact with Admin.");
     }
     else
     {
-      Console.WriteLine($"The book with id {id} is borrowed due {result}");
+      Console.WriteLine($"The book with id={id} is borrowed due {result.Value.ToShortDateString()}");
+      //NB result.Value because result nullable. When result==null filtered before and here can uses without additional checking.
+      //NB can checks with result?.ToShortDateString() ?? "No date"
     }
-    Console.WriteLine("Press any key to continue....");
+    Console.WriteLine("Press any key to continue...");
     Console.ReadKey();
   }
 
-  /* ------------------------------- ReturnBook ------------------------------- */
+  //* ------------------------------- ReturnBook ------------------------------- */
   private void ReturnBook()
   {
-    Console.WriteLine("Press any key to continue....");
+    string input = _view.GetValidInput("Enter valid numeric id of the book you want to return: ");
+    int id;
+    while (!int.TryParse(input, out id))
+    {
+      input = _view.GetValidInput("Invalid input. Please enter valid numeric whole number: ");
+    }
+    var result = _service.ReturnBook(id);
+    if (result)
+    {
+      Console.WriteLine($"The book with id={id} successfully returned. Thank you!");
+
+    }
+    else
+    {
+      Console.WriteLine("Cannot register current book as returned. Take contact with Admin.");
+    }
+    Console.WriteLine("Press any key to continue...");
     Console.ReadKey();
   }
 
-  /* ------------------------------- DeleteBook ------------------------------- */
+  //* ------------------------------- DeleteBook ------------------------------- */
   private void DeleteBook()
   {
-    Console.WriteLine("Press any key to continue....");
+    var input = _view.GetValidInput("Enter Id for the book you want to delete: ");
+
+    int id;
+    while (!int.TryParse(input, out id))
+    {
+      input = _view.GetValidInput("Invalid input. Please enter valid Id as whole number: ");
+    }
+
+    var result = _service.DeleteBook(id);
+
+    if (result)
+    {
+      Console.WriteLine($"Book with id={id} successfully deleted.");
+    }
+    else
+    {
+      Console.WriteLine($"Failed to delete the book with id={id}.");
+    }
+    Console.WriteLine("Press any key to continue...");
     Console.ReadKey();
   }
 
-  /* ------------------------------- GetAllBooks ------------------------------ */
+  //* ------------------------------- GetAllBooks ------------------------------ */
   private void GetAllBooks()
   {
     var books = _service.GetAllBooks();
-    _view.ViewAllBooks(books);
-    Console.WriteLine("Press any key to continue....");
+    _view.ViewBooksList(books);
+    Console.WriteLine("Press any key to continue...");
     Console.ReadKey();
   }
 
-  /* ------------------------------- GetBookById ------------------------------ */
+  //* ------------------------------- GetBookById ------------------------------ */
   private void GetBookById()
   {
     var bookId = _view.GetValidInput("Enter book Id to get details: ");
@@ -137,15 +172,25 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
     var book = _service.GetBookById(id);
 
     _view.ViewBookDetails(book, id);
-    Console.WriteLine("Press any key to continue....");
+    Console.WriteLine("Press any key to continue...");
     Console.ReadKey();
   }
 
-  /* ---------------------------- GetBorrowedBooks --------------------------- */
-  private void GetBorrowedBooks()
+  //* ---------------------------- GetAllBorrowedBooks --------------------------- */
+  private void GetAllBorrowedBooks()
   {
-    var books = _service.GetBorrowedBooks();
-    _view.ViewBorrowedBooks(books);
+    var books = _service.GetAllBorrowedBooks();
+    _view.ViewBooksList(books);
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadKey();
   }
 
+  //* ----------------------- GetBooksWithExpiredDueDate ----------------------- */
+  private void GetBooksWithExpiredDueDate()
+  {
+    var books = _service.GetBooksWithExpiredDueDate();
+    _view.ViewBooksList(books);
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadKey();
+  }
 }
