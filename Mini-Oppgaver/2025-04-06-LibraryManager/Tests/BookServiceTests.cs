@@ -9,9 +9,9 @@ public class BookServiceTests
   public BookServiceTests()
   {
     _service = new BookService();
-    _service.AddBook("1984", "George Orwell");
-    _service.AddBook("Brave New World", "Aldous Huxley");
-    _service.AddBook("To Kill a Mockingbird", "Harper Lee");
+    _service.AddBook("1984", "George Orwell", "Fiction", "F5");
+    _service.AddBook("Brave New World", "Aldous Huxley", "Fiction", "F1");
+    _service.AddBook("To Kill a Mockingbird", "Harper Lee", "American Literature", "A9");
   }
   //* ---------------------- Test BookService Constructor ---------------------- */
   [Fact(DisplayName = "Constructor: Should set initial data and sync Count with collection")]
@@ -31,9 +31,11 @@ public class BookServiceTests
     int count = _service.Count;
     var title = "Pride and Prejudice";
     var author = "Jane Austen";
+    var section = "Classic Literature";
+    var shelf = "C2";
 
     //Act
-    var result = _service.AddBook(title, author);
+    var result = _service.AddBook(title, author, section, shelf);
 
     //Assert
     Assert.True(result);
@@ -41,7 +43,7 @@ public class BookServiceTests
   }
 
   //* --------------------- Test GetBookById With Valid Id --------------------- */
-  [Fact(DisplayName = "GetBookById: Should return correct book details")]
+  [Fact(DisplayName = "GetBookById with valid ID: Should return correct book details")]
   public void GetBookById_Test_With_ValidId()
   {
     //Arrange
@@ -56,7 +58,7 @@ public class BookServiceTests
   }
 
   //* -------------------- Test GetBookById With Invalid Id -------------------- */
-  [Fact(DisplayName = "GetBookById: Should return Null if book not found")]
+  [Fact(DisplayName = "GetBookById with invalid ID: Should return Null")]
   public void GetBookById_Test_With_InvalidId()
   {
     //Arrange
@@ -102,7 +104,7 @@ public class BookServiceTests
   }
 
   //* ---------------------- Test BorrowBook With Valid Id --------------------- */
-  [Fact(DisplayName = "BorrowBook: Should return new dueDate")]
+  [Fact(DisplayName = "BorrowBook with valid ID: Should return new dueDate")]
   public void BorrowBook_Test_With_ValidId()
   {
     //Arrange
@@ -117,7 +119,7 @@ public class BookServiceTests
   }
 
   //* --------------------- Test BorrowBook With Invalid Id -------------------- */
-  [Fact(DisplayName = "BorrowBook: Should return NULL if book not found")]
+  [Fact(DisplayName = "BorrowBook with invalid ID: Should return NULL")]
   public void BorrowBook_Test_With_InvalidId()
   {
     //Arrange
@@ -131,7 +133,7 @@ public class BookServiceTests
   }
 
   //* ------------------ Test BorrowBook When Already Borrowed ----------------- */
-  [Fact(DisplayName = "BorrowBook: Should return NULL if book already borrowed")]
+  [Fact(DisplayName = "BorrowBook when already borrowed: Should return NULL")]
   public void BorrowBook_Test_When_Already_Borrowed()
   {
     //Arrange
@@ -165,7 +167,7 @@ public class BookServiceTests
   }
 
   //* ---------------------- Test ReturnBook With Valid Id --------------------- */
-  [Fact(DisplayName = "ReturnBook: Should return TRUE")]
+  [Fact(DisplayName = "ReturnBook with valid ID: Should return TRUE")]
   public void ReturnBook_Test_With_ValidId()
   {
     //Arrange
@@ -181,7 +183,7 @@ public class BookServiceTests
   }
 
   //* --------------------- Test ReturnBook With Invalid Id -------------------- */
-  [Fact(DisplayName = "ReturnBook: Should return FALSE if book not found")]
+  [Fact(DisplayName = "ReturnBook with invalid Id: Should return FALSE")]
   public void ReturnBook_Test_With_InvalidId()
   {
     //Arrange
@@ -195,7 +197,7 @@ public class BookServiceTests
   }
 
   //* ----------------- Test ReturnBook When Book Not Borrowed ----------------- */
-  [Fact(DisplayName = "ReturnBook: Should return FALSE if book not borrowed")]
+  [Fact(DisplayName = "ReturnBook when book not borrowed: Should return FALSE")]
   public void ReturnBook_Test_When_Book_Avlabile()
   {
     //Arrange
@@ -211,7 +213,7 @@ public class BookServiceTests
   }
 
   //* --------------------------- Test MarkAsReturned -------------------------- */
-  [Fact(DisplayName = "Should set IsBorrowed to FALSE and dueDate to NULL")]
+  [Fact(DisplayName = "MarkAsReturned: Should set IsBorrowed to FALSE and dueDate to NULL")]
   public void MarkAsReturned_Test()
   {
     //Arrange
@@ -228,7 +230,7 @@ public class BookServiceTests
   }
 
   //* ---------------------- Test DeleteBook With Valid Id --------------------- */
-  [Fact(DisplayName = "Should remove book from _books and return TRUE")]
+  [Fact(DisplayName = "DeleteBook with valid ID: Should remove book from _books and return TRUE")]
   public void DeleteBook_Test_With_Valid_Id()
   {
     //Arrange
@@ -245,7 +247,7 @@ public class BookServiceTests
   }
 
   //* --------------------- Test DeleteBook With Invalid Id -------------------- */
-  [Fact(DisplayName = "Should return FALSE")]
+  [Fact(DisplayName = "DeleteBook with invalid ID: Should return FALSE")]
   public void DeleteBook_Test_With_Invalid_Id()
   {
     //Arrange

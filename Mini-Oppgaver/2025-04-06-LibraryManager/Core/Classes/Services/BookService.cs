@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel;
 using Core.Classes.Models;
 using Core.Interfaces;
 
@@ -12,11 +10,11 @@ public class BookService : IBookService
   private int _nextId;
 
   //* --------------------------------- AddBook -------------------------------- */
-  public bool AddBook(string title, string author)
+  public bool AddBook(string title, string author, string section, string shelf)
   {
     try
     {
-      var newBook = new Book(++_nextId, title, author);
+      var newBook = new Book(++_nextId, title, author, section, shelf);
       _books.Add(newBook);
       return true;
     }
@@ -51,7 +49,7 @@ public class BookService : IBookService
   public bool DeleteBook(int id)
   {
     var book = _books.FirstOrDefault(book => book.Id == id);
-    if (book is null) return false;
+    if (book is null || book.IsBorrowed) return false;
     return _books.Remove(book);
   }
   //* ------------------------------- GetAllBooks ------------------------------ */

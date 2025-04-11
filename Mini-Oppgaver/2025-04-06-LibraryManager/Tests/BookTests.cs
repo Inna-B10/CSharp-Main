@@ -11,9 +11,11 @@ public class BookTests
         int id = 1;
         string title = "1984";
         string author = "George Orwell";
+        string section = "Fiction";
+        string shelf = "F5";
 
         // Act
-        var book = new Book(id, title, author);
+        var book = new Book(id, title, author, section, shelf);
 
         // Assert
         Assert.Equal(id, book.Id);
@@ -21,5 +23,7 @@ public class BookTests
         Assert.Equal(author, book.Author);
         Assert.False(book.IsBorrowed);
         Assert.Null(book.DueDate);
+        Assert.Equal(section, book.Section);
+        Assert.Equal(shelf, book.Shelf);
     }
 }

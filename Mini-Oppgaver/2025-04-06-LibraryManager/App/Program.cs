@@ -8,7 +8,7 @@ class Program
 {
   static void Main(string[] args)
   {
-    var startProgram = new LibraryController(new BookService(), new ViewGenerator());
+    var startProgram = new BookController(new BookService(), new ViewGenerator());
     startProgram.Run();
 
   }

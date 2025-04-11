@@ -1,4 +1,3 @@
-using System;
 using Core.Interfaces;
 
 namespace Core.Classes.Views;
@@ -20,6 +19,7 @@ public class ViewGenerator : IViewGenerator
                 5. View All Books
                 6. View Book Details
                 7. View Borrowed Books
+                8. View Books With Expired DueDate
                 0. Exit
         
         ============================================        
@@ -42,6 +42,8 @@ public class ViewGenerator : IViewGenerator
                 Title: {book.Title}
                 Id: {book.Id}
                 Author: {book.Author}
+                Section: {book.Section}
+                Shelf: {book.Shelf}
                 Status: {(book.IsBorrowed ? "Borrowed" : "Available")}
                 {dateContext}
         ================================================
@@ -59,17 +61,17 @@ public class ViewGenerator : IViewGenerator
       return;
     }
     Console.WriteLine("""
-    | Id  | Title                          | Author                         | Status     | Due Date     |
-    ----------------------------------------------------------------------------------------------------
+    | Id  | Title                          | Author                         | Section              | Shelf | Status     | Due Date     |
+    ------------------------------------------------------------------------------------------------------------------------------------
     """);
     foreach (var book in books)
     {
       var status = book.IsBorrowed ? "Borrowed" : "Available";
 
-      Console.WriteLine($"| {book.Id,-3} | {book.Title,-30} | {book.Author,-30} | {status,-10} | {book.DueDate?.ToShortDateString(),-12} |");
+      Console.WriteLine($"| {book.Id,-3} | {book.Title,-30} | {book.Author,-30} | {book.Section,-20} | {book.Shelf,-5} | {status,-10} | {book.DueDate?.ToShortDateString(),-12} |");
     }
     Console.WriteLine(
-"-------------------------------------------- End of list -------------------------------------------"
+   "--------------------------------------------------------------- End of list --------------------------------------------------------"
     );
   }
 

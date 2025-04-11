@@ -1,8 +1,6 @@
-using System;
-
 namespace Core.Interfaces;
 
-public interface ILibraryController
+public interface IBookController
 {
   void Run();
 }

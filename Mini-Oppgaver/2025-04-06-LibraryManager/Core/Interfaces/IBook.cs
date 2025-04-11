@@ -1,5 +1,3 @@
-using System;
-
 namespace Core.Interfaces;
 
 public interface IBook
@@ -9,4 +7,6 @@ public interface IBook
   string Author { get; set; }
   bool IsBorrowed { get; set; }
   DateTime? DueDate { get; set; }
+  string Section { get; set; }
+  string Shelf { get; set; }
 }

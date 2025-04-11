@@ -1,10 +1,8 @@
-using System;
-
 namespace Core.Interfaces;
 
 public interface IBookService
 {
-  bool AddBook(string title, string author);
+  bool AddBook(string title, string author, string section, string shelf);
   DateTime? BorrowBook(int id);
   bool ReturnBook(int id);
   bool DeleteBook(int id);
