@@ -5,15 +5,8 @@ namespace Core.Interfaces;
 public interface IViewGenerator
 {
   void ViewMenu();
-  void ViewBookDetails(IBook? book);
+  void ViewBookDetails(IBook? book, int id);
   void ViewAllBooks(List<IBook> books);
-  //  void ViewBorrowedBooks();
-  //AddBook
-  //BorrowBook
-  //ReturnBook
-  //DeleteBook
-
-  string GetInput(string text);
-
-
+  void ViewBorrowedBooks(List<IBook> books);
+  string GetValidInput(string text);
 }

@@ -9,7 +9,4 @@ public interface IBook
   string Author { get; set; }
   bool IsBorrowed { get; set; }
   DateTime? DueDate { get; set; }
-
-  void MarkAsBorrowed(DateTime dueDate);
-  void MarkAsReturned();
 }

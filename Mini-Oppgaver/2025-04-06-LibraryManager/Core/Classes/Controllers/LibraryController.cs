@@ -17,7 +17,7 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
       int userChoice;
       while (true)
       {
-        var input = _view.GetInput("Enter your choice: ");
+        var input = _view.GetValidInput("Enter your choice: ");
         if (int.TryParse(input, out userChoice))
         {
           break;
@@ -47,7 +47,7 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
           GetBookById();
           break;
         case 7:
-          ViewBorrowedBooks();
+          GetBorrowedBooks();
           break;
         case 0:
           return;
@@ -61,45 +61,91 @@ public class LibraryController(BookService service, ViewGenerator view) : ILibra
     }
   }
 
-  private bool AddBook()
+  /* --------------------------------- AddBook -------------------------------- */
+  private void AddBook()
   {
-    throw new NotImplementedException();
+    var title = _view.GetValidInput("Enter book's title: ");
+    var author = _view.GetValidInput("Enter author's name: ");
+
+    var result = _service.AddBook(title, author);
+    if (result == true)
+    {
+      Console.WriteLine($"Book was added successfully! \nPress any key to continue...");
+      Console.ReadKey();
+    }
+    else
+    {
+      Console.WriteLine($"Couldn't to add a new book. \nPress any key to continue...");
+      Console.ReadKey();
+    }
   }
 
+  /* ------------------------------- BorrowBook ------------------------------- */
   private void BorrowBook()
   {
-    throw new NotImplementedException();
-  }
-  private void ReturnBook()
-  {
-    throw new NotImplementedException();
+    string input = _view.GetValidInput("Enter valid numeric id of the book you want to borrow: ");
+    int id;
+    while (!int.TryParse(input, out id))
+    {
+      input = _view.GetValidInput("Invalid input. Please enter valid numeric whole number: ");
+    }
+    var result = _service.BorrowBook(id);
+    if (result == null)
+    {
+      Console.WriteLine("Cannot register current book as borrowed");
+    }
+    else
+    {
+      Console.WriteLine($"The book with id {id} is borrowed due {result}");
+    }
+    Console.WriteLine("Press any key to continue....");
+    Console.ReadKey();
   }
 
+  /* ------------------------------- ReturnBook ------------------------------- */
+  private void ReturnBook()
+  {
+    Console.WriteLine("Press any key to continue....");
+    Console.ReadKey();
+  }
+
+  /* ------------------------------- DeleteBook ------------------------------- */
   private void DeleteBook()
   {
-    throw new NotImplementedException();
+    Console.WriteLine("Press any key to continue....");
+    Console.ReadKey();
   }
+
+  /* ------------------------------- GetAllBooks ------------------------------ */
   private void GetAllBooks()
   {
     var books = _service.GetAllBooks();
     _view.ViewAllBooks(books);
+    Console.WriteLine("Press any key to continue....");
+    Console.ReadKey();
   }
+
+  /* ------------------------------- GetBookById ------------------------------ */
   private void GetBookById()
   {
-    var bookId = _view.GetInput("Enter book Id to get details");
+    var bookId = _view.GetValidInput("Enter book Id to get details: ");
     int id;
     while (!int.TryParse(bookId, out id))
     {
-      bookId = _view.GetInput("Invalid input. Enter numeric whole number");
+      bookId = _view.GetValidInput("Invalid input. Enter numeric whole number: ");
     }
     var book = _service.GetBookById(id);
 
-    _view.ViewBookDetails(book);
+    _view.ViewBookDetails(book, id);
+    Console.WriteLine("Press any key to continue....");
+    Console.ReadKey();
   }
 
-  private void ViewBorrowedBooks()
+  /* ---------------------------- GetBorrowedBooks --------------------------- */
+  private void GetBorrowedBooks()
   {
-    throw new NotImplementedException();
+    var books = _service.GetBorrowedBooks();
+    _view.ViewBorrowedBooks(books);
   }
 
 }

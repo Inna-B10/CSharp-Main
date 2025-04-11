@@ -9,12 +9,10 @@ public class BookService : IBookService
 {
   private readonly List<IBook> _books = [];
   private int _nextId;
+
+  //* --------------------------------- AddBook -------------------------------- */
   public bool AddBook(string title, string author)
   {
-    //     if (!_books.Any(b => b.Id == book.Id)) return false;
-    // 
-    //     _books.Add(book);
-    //     return true;
     try
     {
       var newBook = new Book(++_nextId, title, author);
@@ -28,30 +26,61 @@ public class BookService : IBookService
     }
   }
 
+  //* ------------------------------- BorrowBook ------------------------------- */
+  public DateTime? BorrowBook(int id)
+  {
+    var book = _books.FirstOrDefault(b => b.Id == id);
+    if (book is null || book.IsBorrowed)
+      return null;
+    DateTime newDueDate = MarkAsBorrowed(book);
+    return newDueDate;
+  }
+
+  //* ------------------------------- ReturnBook ------------------------------- */
+  public bool ReturnBook(int id)
+  {
+    var book = _books.FirstOrDefault(b => b.Id == id);
+    if (book is null || !book.IsBorrowed) return false;
+
+    MarkAsReturned(book);
+    return true;
+  }
+
+  //* ------------------------------- DeleteBook ------------------------------- */
+  public bool DeleteBook(int id)
+  {
+    throw new NotImplementedException();
+  }
+  //* ------------------------------- GetAllBooks ------------------------------ */
   public List<IBook> GetAllBooks()
   {
     return _books;
   }
 
+  //* ------------------------------- GetBookById ------------------------------ */
   public IBook? GetBookById(int id)
   {
     return _books.FirstOrDefault(b => b.Id == id);
   }
 
-  public bool BorrowBook(int id, DateTime dueDate)
+  //* ---------------------------- GetBorrowedBooks ---------------------------- */
+  public List<IBook> GetBorrowedBooks()
   {
-    var book = GetBookById(id);
-    if (book is null || book.IsBorrowed) return false;
-    book.MarkAsBorrowed(dueDate);
-    return true;
+    return [.. _books.Where(book => book.IsBorrowed == true)];
   }
 
-  public bool ReturnBook(int id)
+  //* ----------------------------- MarkAsBorrowed ----------------------------- */
+  public DateTime MarkAsBorrowed(IBook book)
   {
-    var book = GetBookById(id);
-    if (book is null || !book.IsBorrowed) return false;
+    book.IsBorrowed = true;
+    book.DueDate = DateTime.Today.AddDays(14);
+    return (DateTime)book.DueDate;
+  }
 
-    book.MarkAsReturned();
-    return true;
+  //* ----------------------------- MarkAsReturned ----------------------------- */
+  public void MarkAsReturned(IBook book)
+  {
+    book.IsBorrowed = false;
+    book.DueDate = null;
   }
 }

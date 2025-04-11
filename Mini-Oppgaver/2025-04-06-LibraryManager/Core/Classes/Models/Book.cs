@@ -10,18 +10,4 @@ public class Book(int id, string title, string author) : IBook
   public string Author { get; set; } = author;
   public bool IsBorrowed { get; set; }
   public DateTime? DueDate { get; set; }
-
-
-  public void MarkAsBorrowed(DateTime dueDate)
-  {
-    IsBorrowed = true;
-    DueDate = dueDate;
-  }
-
-  public void MarkAsReturned()
-  {
-    IsBorrowed = false;
-    DueDate = null;
-  }
-
 }
