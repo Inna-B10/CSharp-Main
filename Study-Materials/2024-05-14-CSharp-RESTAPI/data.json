@@ -1,0 +1,51 @@
+[
+    {
+        "id": 1,
+        "title": "The Shawshank Redemption",
+        "director": "Frank Darabont",
+        "releaseYear": 1994,
+        "imageURL": "images/1.png"
+    },
+    {
+        "id": 2,
+        "title": "The Godfather",
+        "director": "Francis Ford Coppola",
+        "releaseYear": 1972,
+        "imageURL": "images/2.png"
+    },
+    {
+        "id": 3,
+        "title": "Schindlers List",
+        "director": "Steven Spielberg",
+        "releaseYear": 1993,
+        "imageURL": "images/3.png"
+    },
+    {
+        "id": 4,
+        "title": "Pulp Fiction",
+        "director": "Quentin Tarantino",
+        "releaseYear": 1994,
+        "imageURL": "images/4.png"
+    },
+    {
+        "id": 5,
+        "title": "The Good, The Bad and The Ugly",
+        "director": "Sergio Leone",
+        "releaseYear": 1966,
+        "imageURL": "images/5.png"
+    },
+    {
+        "id": 6,
+        "title": "Fight Club",
+        "director": "David Fincher",
+        "releaseYear": 1999,
+        "imageURL": "images/6.png"
+    },
+    {
+        "id": 7,
+        "title": "One Flew Over The Cuckoo's Nest",
+        "director": "Milos Foreman",
+        "releaseYear": 1975,
+        "imageURL": "images/7.png"
+    }
+]
