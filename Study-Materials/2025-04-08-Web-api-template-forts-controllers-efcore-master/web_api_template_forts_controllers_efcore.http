@@ -1,0 +1,6 @@
+@web_api_template_forts_controllers_efcore_HostAddress = http://localhost:5155
+
+GET {{web_api_template_forts_controllers_efcore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

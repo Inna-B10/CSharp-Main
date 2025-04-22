@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web_api_template_forts_controllers_efcore", "web_api_template_forts_controllers_efcore.csproj", "{AD0BB5CC-D523-D2D2-CB16-B38E70A2EFC0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD0BB5CC-D523-D2D2-CB16-B38E70A2EFC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0BB5CC-D523-D2D2-CB16-B38E70A2EFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0BB5CC-D523-D2D2-CB16-B38E70A2EFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0BB5CC-D523-D2D2-CB16-B38E70A2EFC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5D92F4C4-26D6-4231-821D-F277FD8EF2E6}
+	EndGlobalSection
+EndGlobal
