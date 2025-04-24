@@ -2,15 +2,15 @@
 
 ## Kommandoer
 
-- Nytt løsning
+- Lag en ny løsning
   ```sh
   dotnet new sln --name <solution-name>
   ```
-- Ny test module
+- Legg til en ny test modul
   ```sh
   dotnet new xunit --name <module-name> --output <path/folder-for-module>
   ```
-- Link test module til løsning
+- Link test modulen til løsning
   ```sh
   dotnet sln add <path/folder-for-module>
   ```
@@ -26,7 +26,7 @@
   ```sh
   dotnet sln add <path/folder-for-module>
   ```
-- Link klasse bibliotek til test module
+- Link klasse bibliotek til test modulen
   ```sh
   dotnet add <path/folder-for-test-module> reference <path/folder-for-class-module>
   ```
