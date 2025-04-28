@@ -1,0 +1,10 @@
+# Dependencies
+.terraform
+
+# Sensitive information
+.tfvars
+*.tfstate*
+
+# Our SSH keys
+id_rsa
+id_rsa.pub
