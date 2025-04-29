@@ -1,0 +1,9 @@
+# Dependencies
+.terraform
+
+# Sensitive
+*.tfvars*
+*.tfstate*
+
+# Keyfiles
+ida_rsa*

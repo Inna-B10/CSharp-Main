@@ -1,0 +1,30 @@
+#cloud-config
+hostname: web-app
+
+packages:
+  - git
+
+runcmd:
+  # Ensure .NET 9.0 is installed
+  - |
+    wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+    sudo dpkg -i packages-microsoft-prod.deb
+    rm packages-microsoft-prod.deb
+  - |
+    sudo apt-get update && \
+    sudo apt-get install -y dotnet-sdk-9.0
+  - |
+    sudo apt-get install -y dotnet-runtime-9.0
+
+  # Download application source code
+  - git clone ${application_source} /var/app-code
+
+  # Build the application
+  - dotnet publish /var/app-code/${project_path} --output /var/app
+
+  # Run the application, as service
+  - nohup dotnet /var/app/${project_name}
+
+  # How to update the application and when
+  # Setup FireWall, Uncomplicated FireWall (ufw)
+  # Backup of persisted data

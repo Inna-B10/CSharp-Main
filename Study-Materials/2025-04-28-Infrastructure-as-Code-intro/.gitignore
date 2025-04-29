@@ -8,3 +8,6 @@
 # Our SSH keys
 id_rsa
 id_rsa.pub
+
+
+ssh-keygen.txt
