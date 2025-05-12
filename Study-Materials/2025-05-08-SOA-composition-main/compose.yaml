@@ -1,0 +1,66 @@
+name: soa-composition
+
+services:
+  ingress:
+    image: "docker.io/traefik:v3.3"
+    container_name: ingress
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  homepage:
+    container_name: homepage
+    image: docker.io/joseluisq/static-web-server:2
+    volumes:
+      - ./services/Homepage:/public
+    labels:
+      - "traefik.enable=true"
+      # Since we don't actually have a domain name, we can't use subdomain routing
+      # - "traefik.http.routers.homepage.rule=Host(`localhost`)"
+      - "traefik.http.routers.homepage.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.homepage.priority=1"
+      # END PathPrefix specific config
+      - "traefik.http.routers.homepage.entrypoints=web"
+      - "traefik.http.services.homepage.loadbalancer.server.port=80"
+
+  user-service:
+    container_name: user-service
+    build:
+      context: ./services/UserService
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      # Since we don't actually have a domain name, we can't use subdomain routing
+      # - "traefik.http.routers.user.rule=Host(`user.localhost`)
+      - "traefik.http.routers.user.rule=PathPrefix(`/api/user`)"
+      - "traefik.http.routers.user.priority=10"
+      - "traefik.http.routers.user.middlewares=user-strip"
+      - "traefik.http.middlewares.user-strip.stripPrefix.prefixes=/api/user"
+      # END PathPrefix specific config
+      - "traefik.http.routers.user.entrypoints=web"
+      - "traefik.http.services.user.loadbalancer.server.port=80"
+
+  task-tracker:
+    container_name: task-tracker
+    build:
+      context: ./services/TaskTracker
+      dockerfile: Dockerfile
+    labels:
+      - "traefik.enable=true"
+      # Since we don't actually have a domain name, we can't use subdomain routing
+      # - "traefik.http.routers.task.rule=Host(`tasks.localhost`)"
+      - "traefik.http.routers.task.rule=PathPrefix(`/api/tasks`)"
+      - "traefik.http.routers.task.priority=10"
+      - "traefik.http.routers.task.middlewares=task-strip"
+      - "traefik.http.middlewares.task-strip.stripPrefix.prefixes=/api/tasks"
+      # END PathPrefix specific config
+      - "traefik.http.routers.task.entrypoints=web"
+      - "traefik.http.services.task.loadbalancer.server.port=80"
