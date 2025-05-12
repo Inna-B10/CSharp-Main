@@ -1,0 +1,52 @@
+#cloud-config
+hostname: ${hostname}
+
+users:
+  - name: debian
+    groups: sudo
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - git
+  - cron
+
+runcmd:
+  # Install Docker
+  - curl -fsSL https://get.docker.com | sh
+
+  # Create application directory
+  - mkdir -p /opt/app
+  # Clone repo
+  - git clone ${git_source} /opt/app
+
+  # Write sync script to local drive
+  - |
+    cat <<EOF > /usr/local/bin/sync.sh
+    #!/bin/bash
+    cd /opt/app
+    # Overwrite local changes with the remote
+    git fetch origin
+    git reset --hard origin/${target_branch}
+
+    docker compose -f "${compose_path}" pull
+    docker compose -f "${compose_path}" up -d --remove-orphans --force-recreate
+    EOF
+  # Make script executable
+  - chmod +x /usr/local/bin/sync.sh
+  
+  # Initial Sync
+  - /usr/local/bin/sync.sh
+
+  # Set up a cron job to recreate the containers
+  - |
+    echo "${refresh_interval} root /usr/local/bin/sync.sh" > /etc/cron.d/docker-compose-refresh
+    chmod 0644 /etc/cron.d/docker-compose-refresh
+    systemctl restart cron
+
+final_message: "Docker Compose app deployed and refresh cronjob installed."

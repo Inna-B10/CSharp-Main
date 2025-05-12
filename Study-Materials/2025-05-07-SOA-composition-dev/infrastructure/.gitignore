@@ -1,0 +1,6 @@
+# Dependencies
+.terraform
+
+# Sensitive
+*.tfvars*
+*.tfstate*
